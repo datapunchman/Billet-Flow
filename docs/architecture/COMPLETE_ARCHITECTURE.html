@@ -1,0 +1,2253 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Billet Flow - Technical Architecture Documentation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #1e293b;
+      background: white;
+      padding: 60px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: #0f172a;
+      font-size: 2.5em;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid #f97316;
+    }
+
+    h2 {
+      color: #1e293b;
+      font-size: 2em;
+      margin-top: 40px;
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    h3 {
+      color: #334155;
+      font-size: 1.5em;
+      margin-top: 30px;
+      margin-bottom: 12px;
+    }
+
+    h4 {
+      color: #475569;
+      font-size: 1.2em;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin-bottom: 15px;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin-left: 30px;
+      margin-bottom: 15px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    code {
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.9em;
+      color: #e11d48;
+    }
+
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin-bottom: 20px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.85em;
+      line-height: 1.5;
+    }
+
+    pre code {
+      background: transparent;
+      color: #e2e8f0;
+      padding: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-size: 0.9em;
+    }
+
+    th {
+      background: #f97316;
+      color: white;
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 10px 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    blockquote {
+      border-left: 4px solid #f97316;
+      padding-left: 20px;
+      margin: 20px 0;
+      font-style: italic;
+      color: #64748b;
+    }
+
+    hr {
+      border: none;
+      border-top: 2px solid #e2e8f0;
+      margin: 40px 0;
+    }
+
+    a {
+      color: #f97316;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .page-break {
+      page-break-after: always;
+    }
+
+    @media print {
+      body {
+        padding: 40px;
+      }
+
+      h1, h2, h3, h4 {
+        page-break-after: avoid;
+      }
+
+      pre, table {
+        page-break-inside: avoid;
+      }
+    }
+
+    /* Status badges */
+    .status-complete { color: #16a34a; font-weight: bold; }
+    .status-critical { color: #dc2626; font-weight: bold; }
+    .status-warning { color: #f59e0b; font-weight: bold; }
+
+    /* Cover page */
+    .cover-page {
+      text-align: center;
+      padding: 100px 0;
+      page-break-after: always;
+    }
+
+    .cover-page h1 {
+      font-size: 3em;
+      border: none;
+      margin-bottom: 30px;
+    }
+
+    .cover-page .subtitle {
+      font-size: 1.5em;
+      color: #64748b;
+      margin-bottom: 60px;
+    }
+
+    .cover-page .meta {
+      font-size: 1.1em;
+      color: #475569;
+      line-height: 2;
+    }
+  </style>
+</head>
+<body>
+  <div class="cover-page">
+    <h1>Billet Flow</h1>
+    <div class="subtitle">Complete Technical Architecture Documentation</div>
+    <div class="meta">
+      <p><strong>Version:</strong> 1.0</p>
+      <p><strong>Date:</strong> September 3, 2026</p>
+      <p><strong>Application:</strong> CNC Estimator / Manufacturing Cost Estimation Platform</p>
+      <p><strong>Repository:</strong> <a href="https://github.com/datapunchman/Billet-Flow">github.com/datapunchman/Billet-Flow</a></p>
+    </div>
+  </div>
+
+  <h1>Billet Flow - Complete Technical Architecture Documentation</h1>
+<p><strong>Version:</strong> 1.0<br><strong>Date:</strong> September 3, 2026<br><strong>Application:</strong> CNC Estimator / Manufacturing Cost Estimation Platform<br><strong>Repository:</strong> <a href="https://github.com/datapunchman/Billet-Flow">https://github.com/datapunchman/Billet-Flow</a><br><strong>Local Development:</strong> <a href="http://localhost:3001">http://localhost:3001</a></p>
+<hr>
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="#executive-summary">Executive Summary</a></li>
+<li><a href="#what-was-discovered">What Was Discovered</a></li>
+<li><a href="#current-implementation-status">Current Implementation Status</a></li>
+<li><a href="#critical-implementation-gaps">Critical Implementation Gaps</a></li>
+<li><a href="#technology-stack">Technology Stack</a></li>
+<li><a href="#system-architecture">System Architecture</a></li>
+<li><a href="#application-route-map">Application Route Map</a></li>
+<li><a href="#screen-by-screen-architecture">Screen-by-Screen Architecture</a></li>
+<li><a href="#database-architecture">Database Architecture</a></li>
+<li><a href="#api-architecture">API Architecture</a></li>
+<li><a href="#authentication-authorization">Authentication &amp; Authorization</a></li>
+<li><a href="#cnc-costing-architecture">CNC Costing Architecture</a></li>
+<li><a href="#payment-architecture">Payment Architecture</a></li>
+<li><a href="#security-assessment">Security Assessment</a></li>
+<li><a href="#implementation-roadmap">Implementation Roadmap</a></li>
+<li><a href="#deployment-architecture">Deployment Architecture</a></li>
+<li><a href="#appendix-screenshots">Appendix: Screenshots</a></li>
+</ol>
+<hr>
+<h2>Executive Summary</h2>
+<h3>Project Overview</h3>
+<p><strong>Billet Flow</strong> is a SaaS-based CNC manufacturing cost estimation platform that enables users to upload STEP files and receive AI-powered manufacturing cost estimates. The platform targets manufacturers, machine shops, and procurement teams who need rapid, accurate CNC machining cost calculations.</p>
+<h3>Current Development Phase</h3>
+<ul>
+<li><strong>Status:</strong> MVP / Alpha</li>
+<li><strong>UI/UX:</strong> 100% Complete with production-ready design</li>
+<li><strong>Backend:</strong> 0% Complete (Mock API only)</li>
+<li><strong>Database:</strong> Not implemented</li>
+<li><strong>External Services:</strong> Not integrated</li>
+<li><strong>Deployment:</strong> Local development only</li>
+</ul>
+<h3>Key Findings</h3>
+<p>✅ <strong>Strengths:</strong></p>
+<ul>
+<li>Complete, production-ready UI/UX across 18 routes</li>
+<li>Consistent design system (dark navy + orange accent)</li>
+<li>Responsive layouts (390px to 1440px+)</li>
+<li>Client-side form validation</li>
+<li>Excellent user experience</li>
+</ul>
+<p>❌ <strong>Critical Gaps:</strong></p>
+<ul>
+<li>No backend API (100% mock data)</li>
+<li>No database persistence</li>
+<li>No real authentication/authorization</li>
+<li>No STEP file processing</li>
+<li>No CNC cost calculation engine</li>
+<li>No payment integration</li>
+<li>No email/SMS infrastructure</li>
+</ul>
+<h3>Production Readiness Assessment</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Status</th>
+<th>Blocker Level</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Frontend</td>
+<td>✅ Ready</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Backend API</td>
+<td>❌ Not Started</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>❌ Not Started</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>Authentication</td>
+<td>❌ Mock Only</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>File Processing</td>
+<td>❌ Not Started</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>Cost Engine</td>
+<td>❌ Not Started</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>Payments</td>
+<td>❌ Not Started</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>Email/SMS</td>
+<td>❌ Not Started</td>
+<td>🔴 Critical</td>
+</tr>
+</tbody></table>
+<p><strong>Estimated Time to Production:</strong> 6-7 months with 2-3 full-time engineers</p>
+<hr>
+<h2>What Was Discovered</h2>
+<h3>Complete Application Crawl</h3>
+<p><strong>18 Routes Discovered and Documented:</strong></p>
+<h4>Public Routes (7)</h4>
+<ol>
+<li><code>/</code> - Landing page with hero, features, pricing</li>
+<li><code>/register</code> - User registration with coupon modal</li>
+<li><code>/login</code> - User authentication</li>
+<li><code>/verify-email</code> - Email verification step</li>
+<li><code>/verify-phone</code> - Phone OTP verification (6 cells)</li>
+<li><code>/select-plan</code> - Subscription plan selection</li>
+<li><code>/payment</code> - Payment processing page</li>
+</ol>
+<h4>User Dashboard Routes (6)</h4>
+<ol start="8">
+<li><code>/dashboard</code> - User home with recent estimates</li>
+<li><code>/upload</code> - STEP file upload interface</li>
+<li><code>/history</code> - Estimate history table</li>
+<li><code>/estimate/[id]</code> - Detailed estimate view</li>
+<li><code>/profile</code> - User profile management</li>
+<li><code>/subscription</code> - Subscription management</li>
+</ol>
+<h4>Admin Portal Routes (6)</h4>
+<ol start="14">
+<li><code>/admin</code> - Admin dashboard with KPIs</li>
+<li><code>/admin/users</code> - User management table</li>
+<li><code>/admin/subscriptions</code> - Subscription management</li>
+<li><code>/admin/coupons</code> - Coupon creation and management</li>
+<li><code>/admin/settings</code> - System configuration</li>
+<li><code>/admin/audit</code> - Audit log viewer</li>
+</ol>
+<p><strong>All routes tested:</strong> ✅ HTTP 200<br><strong>Screenshots captured:</strong> ✅ 18 files at 1440x900</p>
+<h3>Technology Stack Discovery</h3>
+<p><strong>Frontend (Current):</strong></p>
+<ul>
+<li>Next.js 16.3.4 (App Router)</li>
+<li>React 19.2.8</li>
+<li>TypeScript 5.x</li>
+<li>Tailwind CSS 4.3.3</li>
+<li>React Hook Form + Zod validation</li>
+<li>Axios 1.20.0</li>
+<li>Zustand 5.0.15 (state management)</li>
+<li>Lucide React 1.40.0 (icons)</li>
+<li>GSAP + Anime.js (animations)</li>
+</ul>
+<p><strong>Backend (None - All Mock):</strong></p>
+<ul>
+<li>lib/mock-api.ts with hardcoded data</li>
+<li>localStorage for client-side persistence</li>
+<li>No server-side code</li>
+<li>No database connections</li>
+<li>No external service integrations</li>
+</ul>
+<h3>Code Structure</h3>
+<pre><code>cnc-estimator/
+├── app/                          # Next.js App Router
+│   ├── (public)/                 # Public routes
+│   │   ├── login/
+│   │   ├── register/
+│   │   ├── verify-email/
+│   │   ├── verify-phone/
+│   │   ├── select-plan/
+│   │   └── payment/
+│   ├── (authenticated)/          # User dashboard
+│   │   ├── dashboard/
+│   │   ├── upload/
+│   │   ├── history/
+│   │   ├── estimate/[id]/
+│   │   ├── profile/
+│   │   └── subscription/
+│   ├── (admin)/                  # Admin portal
+│   │   └── admin/
+│   │       ├── page.tsx          # Dashboard
+│   │       ├── users/
+│   │       ├── subscriptions/
+│   │       ├── coupons/
+│   │       ├── settings/
+│   │       └── audit/
+│   ├── layout.tsx                # Root layout
+│   ├── page.tsx                  # Landing page
+│   └── globals.css               # Design system
+├── components/
+│   ├── marketing/                # Landing components
+│   └── ui/                       # Reusable components
+├── lib/
+│   ├── api.ts                    # Axios client
+│   ├── auth.ts                   # Client auth utils
+│   ├── mock-api.ts               # ⚠️ ALL DATA HERE
+│   ├── validations.ts            # Zod schemas
+│   └── utils.ts
+└── public/                       # Static assets
+</code></pre>
+<hr>
+<h2>Current Implementation Status</h2>
+<h3>✅ Fully Implemented (UI/UX)</h3>
+<p><strong>1. Landing Page</strong></p>
+<ul>
+<li>Hero section with CTA</li>
+<li>Features grid with icons</li>
+<li>How it works (3-step process)</li>
+<li>Pricing cards (3 plans)</li>
+<li>FAQ accordion</li>
+<li>Footer with links</li>
+<li>Smooth scroll navigation</li>
+<li>Responsive design</li>
+</ul>
+<p><strong>2. Registration Flow</strong></p>
+<ul>
+<li>Full name validation (min 2 chars)</li>
+<li>Email validation (proper format)</li>
+<li>Phone validation (+91XXXXXXXXXX)</li>
+<li>Password strength indicator</li>
+<li>Confirm password matching</li>
+<li>Terms checkbox requirement</li>
+<li>Coupon modal with backdrop</li>
+<li>Real-time validation errors</li>
+</ul>
+<p><strong>3. Email &amp; Phone Verification</strong></p>
+<ul>
+<li>Email verification page with instructions</li>
+<li>6-cell OTP input with auto-advance</li>
+<li>Paste support for OTP codes</li>
+<li>Resend OTP with 60s cooldown</li>
+<li>Demo mode skip options</li>
+<li>Success state animations</li>
+</ul>
+<p><strong>4. Plan Selection</strong></p>
+<ul>
+<li>3 subscription plans displayed</li>
+<li>Pricing in INR (₹)</li>
+<li>Savings badges on longer plans</li>
+<li>Orange accent on selected plan</li>
+<li>Progress indicator (Step 3 of 4)</li>
+<li>Responsive grid layout</li>
+</ul>
+<p><strong>5. User Dashboard</strong></p>
+<ul>
+<li>Recent estimates table</li>
+<li>Quick stats cards</li>
+<li>Upload new file CTA</li>
+<li>Sidebar navigation</li>
+<li>User menu with logout</li>
+<li>Responsive mobile menu</li>
+</ul>
+<p><strong>6. File Upload</strong></p>
+<ul>
+<li>Drag and drop zone</li>
+<li>File type validation (.step, .stp)</li>
+<li>File size display</li>
+<li>Project name input</li>
+<li>Quantity selector</li>
+<li>Material dropdown</li>
+<li>Tolerance selection</li>
+<li>Notes textarea</li>
+<li>Upload progress simulation</li>
+</ul>
+<p><strong>7. Admin Dashboard</strong></p>
+<ul>
+<li>4 KPI cards:<ul>
+<li>Total Users: 1,248</li>
+<li>Total Revenue: ₹1,25,840</li>
+<li>Total Estimates: 5,647</li>
+<li>Active Subscriptions: 456</li>
+</ul>
+</li>
+<li>System health metrics</li>
+<li>Recent activity feed</li>
+<li>Sidebar navigation</li>
+<li>Professional B2B design</li>
+</ul>
+<p><strong>8. Admin User Management</strong></p>
+<ul>
+<li>User table with search</li>
+<li>Status filters (active, trial, suspended)</li>
+<li>Role filters (user, admin)</li>
+<li>Sortable columns</li>
+<li>Action menu per user</li>
+<li>Pagination controls</li>
+</ul>
+<p><strong>9. Admin Coupon Management</strong></p>
+<ul>
+<li>Coupon grid cards</li>
+<li>Usage progress bars</li>
+<li>Status badges (active, expired)</li>
+<li>Copy code button</li>
+<li>Create/edit/delete actions</li>
+<li>Expiry date display</li>
+</ul>
+<p><strong>10. Admin Settings</strong></p>
+<ul>
+<li>General settings section</li>
+<li>Email settings (SMTP)</li>
+<li>Payment settings (Razorpay)</li>
+<li>Storage settings (Azure)</li>
+<li>AI settings (OpenAI)</li>
+<li>Feature flags toggles</li>
+</ul>
+<h3>⚠️ Mock Implementation Only</h3>
+<p><strong>lib/mock-api.ts provides:</strong></p>
+<pre><code class="language-typescript">// All these return hardcoded data with fake delays
+mockApi.register(data)           // Always succeeds
+mockApi.login(email, password)   // Any credentials work
+mockApi.verifyEmail(token)       // Always succeeds
+mockApi.sendPhoneOTP(phone)      // Returns success
+mockApi.verifyPhoneOTP(otp)      // Accepts any 6 digits
+mockApi.validateCoupon(code)     // Returns fake coupon
+mockApi.uploadFile(file)         // Simulates progress
+mockApi.getEstimates()           // Returns hardcoded list
+mockApi.getAdminStats()          // Returns fake metrics
+// ... 20+ more mock functions
+</code></pre>
+<p><strong>Authentication Flow (Current):</strong></p>
+<pre><code>User enters credentials
+  ↓
+mockApi.login() called
+  ↓
+Returns { token: &quot;mock_&quot; + Date.now(), user: {...} }
+  ↓
+Stored in localStorage
+  ↓
+Redirect to /admin or /dashboard
+</code></pre>
+<p><strong>No validation:</strong> Any email/password combination works<br><strong>No security:</strong> localStorage can be modified via console<br><strong>No persistence:</strong> Data lost on page refresh</p>
+<hr>
+<h2>Critical Implementation Gaps</h2>
+<h3>1. Backend API (DOES NOT EXIST)</h3>
+<p><strong>Status:</strong> 🔴 Critical Blocker<br><strong>Current:</strong> All data from lib/mock-api.ts<br><strong>Required:</strong> Complete REST API with Express/NestJS</p>
+<p><strong>Missing Endpoints (50+):</strong></p>
+<pre><code>Authentication &amp; Authorization:
+POST   /api/auth/register
+POST   /api/auth/login
+POST   /api/auth/logout
+POST   /api/auth/refresh-token
+POST   /api/auth/forgot-password
+POST   /api/auth/reset-password
+GET    /api/auth/verify-email?token=
+POST   /api/auth/send-otp
+POST   /api/auth/verify-otp
+
+User Management:
+GET    /api/users/me
+PUT    /api/users/me
+PUT    /api/users/me/password
+DELETE /api/users/me
+
+File Management:
+POST   /api/uploads              # Multipart file upload
+GET    /api/uploads              # List user uploads
+GET    /api/uploads/:id          # Get upload details
+DELETE /api/uploads/:id          # Delete upload
+
+Estimation:
+POST   /api/estimates            # Generate new estimate
+GET    /api/estimates            # List estimates
+GET    /api/estimates/:id        # Get estimate detail
+GET    /api/estimates/:id/pdf    # Download PDF
+
+Subscription:
+GET    /api/subscriptions/plans  # List available plans
+POST   /api/subscriptions        # Create subscription
+GET    /api/subscriptions/me     # Get my subscription
+PUT    /api/subscriptions/me/cancel
+GET    /api/subscriptions/me/invoices
+
+Payment:
+POST   /api/payments/create-order        # Razorpay order
+POST   /api/payments/verify-signature    # Verify payment
+POST   /api/webhooks/razorpay            # Payment webhook
+
+Coupons:
+POST   /api/coupons/validate     # Check coupon validity
+
+Admin:
+GET    /api/admin/metrics        # Dashboard KPIs
+GET    /api/admin/users          # User management
+PUT    /api/admin/users/:id
+DELETE /api/admin/users/:id
+POST   /api/admin/users/:id/suspend
+GET    /api/admin/subscriptions
+GET    /api/admin/coupons
+POST   /api/admin/coupons
+PUT    /api/admin/coupons/:id
+DELETE /api/admin/coupons/:id
+GET    /api/admin/settings
+PUT    /api/admin/settings
+GET    /api/admin/audit-logs
+</code></pre>
+<h3>2. Database (DOES NOT EXIST)</h3>
+<p><strong>Status:</strong> 🔴 Critical Blocker<br><strong>Current:</strong> No database<br><strong>Required:</strong> PostgreSQL 15+</p>
+<p><strong>Required Tables (28+):</strong></p>
+<pre><code class="language-sql">-- Core Tables
+users
+user_profiles
+user_sessions
+password_reset_tokens
+email_verifications
+otp_verifications
+
+-- Subscription Tables
+subscription_plans
+subscriptions
+subscription_history
+invoices
+payments
+
+-- Coupon Tables
+coupons
+coupon_redemptions
+
+-- File &amp; Estimation Tables
+uploaded_files
+file_processing_jobs
+estimates
+estimate_items
+estimate_materials
+estimate_operations
+
+-- Admin Tables
+audit_logs
+system_settings
+feature_flags
+admin_notifications
+
+-- Supporting Tables
+materials_catalog
+machine_rates
+labor_rates
+overhead_rates
+</code></pre>
+<p><strong>Example Schema:</strong></p>
+<pre><code class="language-sql">CREATE TABLE users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  phone VARCHAR(20),
+  role VARCHAR(20) DEFAULT &#39;user&#39;, -- user, admin
+  status VARCHAR(20) DEFAULT &#39;trial&#39;, -- trial, active, suspended
+  email_verified BOOLEAN DEFAULT FALSE,
+  phone_verified BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW(),
+  last_login TIMESTAMP
+);
+
+CREATE TABLE subscriptions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  plan_id VARCHAR(50) NOT NULL,
+  status VARCHAR(20) NOT NULL, -- trial, active, cancelled, expired
+  trial_end_date TIMESTAMP,
+  billing_start_date TIMESTAMP,
+  next_billing_date TIMESTAMP,
+  amount_inr NUMERIC(10,2) NOT NULL,
+  razorpay_subscription_id VARCHAR(100),
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE estimates (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id),
+  upload_id UUID REFERENCES uploaded_files(id),
+  project_name VARCHAR(255) NOT NULL,
+  quantity INT NOT NULL,
+  material VARCHAR(100) NOT NULL,
+  tolerance VARCHAR(50),
+  status VARCHAR(20) DEFAULT &#39;processing&#39;, -- processing, completed, failed
+  total_cost_inr NUMERIC(12,2),
+  material_cost_inr NUMERIC(10,2),
+  machining_cost_inr NUMERIC(10,2),
+  labor_cost_inr NUMERIC(10,2),
+  overhead_cost_inr NUMERIC(10,2),
+  processing_time_seconds INT,
+  machining_time_minutes NUMERIC(10,2),
+  created_at TIMESTAMP DEFAULT NOW(),
+  completed_at TIMESTAMP
+);
+
+CREATE TABLE coupons (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  code VARCHAR(50) UNIQUE NOT NULL,
+  description TEXT,
+  discount_type VARCHAR(20) NOT NULL, -- percentage, fixed, trial_extension
+  discount_value NUMERIC(10,2) NOT NULL,
+  max_uses INT,
+  current_uses INT DEFAULT 0,
+  expires_at TIMESTAMP NOT NULL,
+  applicable_plans TEXT[],
+  status VARCHAR(20) DEFAULT &#39;active&#39;,
+  created_by UUID REFERENCES users(id),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE audit_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  actor_id UUID REFERENCES users(id),
+  action VARCHAR(100) NOT NULL,
+  entity_type VARCHAR(50) NOT NULL,
+  entity_id UUID,
+  old_value JSONB,
+  new_value JSONB,
+  ip_address INET,
+  user_agent TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+</code></pre>
+<h3>3. Authentication (MOCK ONLY)</h3>
+<p><strong>Status:</strong> 🔴 Critical Security Risk<br><strong>Current:</strong> localStorage with fake tokens<br><strong>Issues:</strong></p>
+<ul>
+<li>❌ No password hashing</li>
+<li>❌ No JWT validation</li>
+<li>❌ No token expiration</li>
+<li>❌ No refresh tokens</li>
+<li>❌ No HTTP-only cookies</li>
+<li>❌ XSS vulnerable (localStorage)</li>
+<li>❌ No CSRF protection</li>
+<li>❌ Anyone can become admin via console</li>
+</ul>
+<p><strong>Required Implementation:</strong></p>
+<pre><code class="language-typescript">// Backend: JWT generation
+import bcrypt from &#39;bcrypt&#39;;
+import jwt from &#39;jsonwebtoken&#39;;
+
+async function login(email: string, password: string) {
+  // 1. Find user by email
+  const user = await db.users.findUnique({ where: { email } });
+  if (!user) throw new Error(&#39;Invalid credentials&#39;);
+  
+  // 2. Verify password
+  const valid = await bcrypt.compare(password, user.password_hash);
+  if (!valid) throw new Error(&#39;Invalid credentials&#39;);
+  
+  // 3. Generate JWT tokens
+  const accessToken = jwt.sign(
+    { userId: user.id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: &#39;15m&#39; }
+  );
+  
+  const refreshToken = jwt.sign(
+    { userId: user.id },
+    process.env.JWT_REFRESH_SECRET,
+    { expiresIn: &#39;7d&#39; }
+  );
+  
+  // 4. Store refresh token in database
+  await db.user_sessions.create({
+    data: { userId: user.id, refreshToken, expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) }
+  });
+  
+  // 5. Set HTTP-only cookies
+  res.cookie(&#39;accessToken&#39;, accessToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: &#39;strict&#39;,
+    maxAge: 15 * 60 * 1000
+  });
+  
+  res.cookie(&#39;refreshToken&#39;, refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: &#39;strict&#39;,
+    maxAge: 7 * 24 * 60 * 60 * 1000
+  });
+  
+  return { user: { id: user.id, email: user.email, name: user.name, role: user.role } };
+}
+
+// Middleware: Protect routes
+function requireAuth(req, res, next) {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json({ error: &#39;Unauthorized&#39; });
+  
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({ error: &#39;Invalid token&#39; });
+  }
+}
+
+function requireAdmin(req, res, next) {
+  if (req.user.role !== &#39;admin&#39;) {
+    return res.status(403).json({ error: &#39;Forbidden&#39; });
+  }
+  next();
+}
+</code></pre>
+<h3>4. STEP File Processing (DOES NOT EXIST)</h3>
+<p><strong>Status:</strong> 🔴 Critical - Core Feature<br><strong>Current:</strong> Mock file upload with progress bar<br><strong>Required:</strong> Complete CAD processing pipeline</p>
+<p><strong>Processing Pipeline:</strong></p>
+<pre><code>STEP File Upload
+  ↓
+1. File Validation
+   - Check file extension (.step, .stp)
+   - Check file size (max 100MB)
+   - Scan for malware
+   ↓
+2. Upload to Azure Blob Storage
+   - Generate unique filename
+   - Store in user-specific container
+   - Generate signed URL for access
+   ↓
+3. Queue Background Job
+   - Add to processing queue (BullMQ)
+   - Return job ID to user
+   - Update estimate status: &#39;processing&#39;
+   ↓
+4. STEP Parser (Worker Process)
+   - Use OpenCascade or commercial parser
+   - Extract geometry data
+   - Identify features (holes, faces, pockets, etc.)
+   - Calculate volume and surface area
+   ↓
+5. Feature Recognition
+   - Classify machining operations
+   - Detect holes (diameter, depth, tolerance)
+   - Detect pockets (dimensions, depth)
+   - Detect faces (area, finish requirements)
+   - Detect threads (type, size)
+   ↓
+6. Cost Calculation
+   - Material cost = volume × density × price/kg
+   - Machining time per feature
+   - Setup time estimation
+   - Labor cost
+   - Overhead allocation
+   ↓
+7. Generate Estimate Report
+   - Create estimate record in database
+   - Generate PDF report
+   - Store PDF in blob storage
+   - Update status: &#39;completed&#39;
+   ↓
+8. Notify User
+   - Send email notification
+   - Update dashboard
+</code></pre>
+<p><strong>Technology Options:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Option 1</th>
+<th>Option 2</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>STEP Parser</td>
+<td>OpenCascade (free)</td>
+<td>CADExchanger (paid)</td>
+<td>Start with OpenCascade</td>
+</tr>
+<tr>
+<td>Worker Queue</td>
+<td>BullMQ + Redis</td>
+<td>Azure Service Bus</td>
+<td>BullMQ for flexibility</td>
+</tr>
+<tr>
+<td>File Storage</td>
+<td>Azure Blob Storage</td>
+<td>AWS S3</td>
+<td>Azure (consistent with hosting)</td>
+</tr>
+<tr>
+<td>PDF Generation</td>
+<td>Puppeteer</td>
+<td>PDFKit</td>
+<td>Puppeteer for complex layouts</td>
+</tr>
+</tbody></table>
+<h3>5. CNC Cost Calculation Engine (DOES NOT EXIST)</h3>
+<p><strong>Status:</strong> 🔴 Critical - Core Business Logic<br><strong>Current:</strong> Hardcoded estimate numbers<br><strong>Required:</strong> Complete costing algorithm</p>
+<p><strong>Costing Formula:</strong></p>
+<pre><code>Total Cost = Material Cost + Machining Cost + Labor Cost + Overhead + Markup
+
+Where:
+- Material Cost = Volume (cm³) × Density (g/cm³) × Material Price (INR/kg) × Waste Factor
+- Machining Cost = Σ(Feature Machining Time) × Machine Hourly Rate (INR/hr)
+- Labor Cost = Total Machining Time × Labor Hourly Rate (INR/hr)
+- Overhead = (Material + Machining + Labor) × Overhead %
+- Markup = (Material + Machining + Labor + Overhead) × Markup %
+</code></pre>
+<p><strong>Material Cost Calculation:</strong></p>
+<pre><code class="language-typescript">interface Material {
+  name: string;
+  density: number;        // g/cm³
+  pricePerKg: number;    // INR
+  wasteFactor: number;   // 1.1 = 10% waste
+}
+
+const materials: Material[] = [
+  { name: &#39;Aluminum 6061&#39;, density: 2.7, pricePerKg: 350, wasteFactor: 1.1 },
+  { name: &#39;Stainless Steel 304&#39;, density: 8.0, pricePerKg: 450, wasteFactor: 1.15 },
+  { name: &#39;Mild Steel&#39;, density: 7.85, pricePerKg: 250, wasteFactor: 1.1 },
+  { name: &#39;Brass&#39;, density: 8.5, pricePerKg: 550, wasteFactor: 1.15 },
+  { name: &#39;Copper&#39;, density: 8.96, pricePerKg: 650, wasteFactor: 1.2 },
+];
+
+function calculateMaterialCost(volumeCm3: number, material: Material): number {
+  const massKg = (volumeCm3 * material.density) / 1000;
+  const cost = massKg * material.pricePerKg * material.wasteFactor;
+  return Math.round(cost * 100) / 100; // Round to 2 decimals
+}
+</code></pre>
+<p><strong>Machining Time Estimation:</strong></p>
+<pre><code class="language-typescript">interface MachiningOperation {
+  type: &#39;drilling&#39; | &#39;face-milling&#39; | &#39;pocketing&#39; | &#39;threading&#39; | &#39;turning&#39;;
+  volume?: number;        // Material removal volume (cm³)
+  area?: number;          // Surface area (cm²)
+  length?: number;        // Length (mm)
+  diameter?: number;      // Hole/thread diameter (mm)
+  depth?: number;         // Depth (mm)
+  tolerance?: string;     // &#39;standard&#39; | &#39;fine&#39; | &#39;precise&#39;
+}
+
+// Machine rates (INR per hour)
+const machineRates = {
+  &#39;cnc-mill-3axis&#39;: 1200,
+  &#39;cnc-mill-5axis&#39;: 2500,
+  &#39;cnc-lathe&#39;: 1000,
+  &#39;drill-press&#39;: 500,
+};
+
+// Typical machining speeds
+function estimateMachiningTime(operation: MachiningOperation): number {
+  switch (operation.type) {
+    case &#39;drilling&#39;:
+      // Drilling time = depth / feed rate
+      // Assume 50mm/min feed rate for standard tolerance
+      const feedRate = operation.tolerance === &#39;precise&#39; ? 30 : 50;
+      return (operation.depth! / feedRate) + 2; // +2 min for setup
+      
+    case &#39;face-milling&#39;:
+      // Milling time = area / (cutting width × feed rate)
+      // Assume 100 cm²/min for standard
+      const removalRate = operation.tolerance === &#39;precise&#39; ? 60 : 100;
+      return (operation.area! / removalRate) + 5; // +5 min for setup
+      
+    case &#39;pocketing&#39;:
+      // Material removal rate varies by depth
+      const volumeRate = operation.tolerance === &#39;precise&#39; ? 10 : 20; // cm³/min
+      return (operation.volume! / volumeRate) + 10; // +10 min for toolpath setup
+      
+    default:
+      return 10; // Default estimate
+  }
+}
+
+function calculateMachiningCost(operations: MachiningOperation[]): number {
+  const totalMinutes = operations.reduce((sum, op) =&gt; sum + estimateMachiningTime(op), 0);
+  const machineRate = machineRates[&#39;cnc-mill-3axis&#39;]; // Default machine
+  const costPerMinute = machineRate / 60;
+  return totalMinutes * costPerMinute;
+}
+</code></pre>
+<p><strong>Complete Estimate Generation:</strong></p>
+<pre><code class="language-typescript">interface EstimateInput {
+  volumeCm3: number;
+  material: string;
+  quantity: number;
+  tolerance: string;
+  operations: MachiningOperation[];
+}
+
+function generateEstimate(input: EstimateInput): EstimateResult {
+  // 1. Material Cost
+  const materialData = materials.find(m =&gt; m.name === input.material)!;
+  const materialCostPerUnit = calculateMaterialCost(input.volumeCm3, materialData);
+  
+  // 2. Machining Cost
+  const machiningCostPerUnit = calculateMachiningCost(input.operations);
+  
+  // 3. Labor Cost (assume 1 operator per machine)
+  const laborRate = 400; // INR per hour
+  const totalMachiningMinutes = input.operations.reduce((sum, op) =&gt; sum + estimateMachiningTime(op), 0);
+  const laborCostPerUnit = (totalMachiningMinutes / 60) * laborRate;
+  
+  // 4. Setup Cost (one-time, amortized over quantity)
+  const setupTime = 60; // 1 hour setup
+  const setupCost = (setupTime / 60) * (machineRates[&#39;cnc-mill-3axis&#39;] + laborRate);
+  const setupCostPerUnit = setupCost / input.quantity;
+  
+  // 5. Subtotal
+  const subtotalPerUnit = materialCostPerUnit + machiningCostPerUnit + laborCostPerUnit + setupCostPerUnit;
+  
+  // 6. Overhead (20%)
+  const overheadPerUnit = subtotalPerUnit * 0.20;
+  
+  // 7. Markup (quantity-based discount)
+  let markupPercent = 0.30; // 30% default
+  if (input.quantity &gt;= 100) markupPercent = 0.15;
+  else if (input.quantity &gt;= 50) markupPercent = 0.20;
+  else if (input.quantity &gt;= 10) markupPercent = 0.25;
+  
+  const markupPerUnit = subtotalPerUnit * markupPercent;
+  
+  // 8. Total
+  const totalPerUnit = subtotalPerUnit + overheadPerUnit + markupPerUnit;
+  const totalForQuantity = totalPerUnit * input.quantity;
+  
+  return {
+    perUnit: {
+      material: materialCostPerUnit,
+      machining: machiningCostPerUnit,
+      labor: laborCostPerUnit,
+      setup: setupCostPerUnit,
+      overhead: overheadPerUnit,
+      markup: markupPerUnit,
+      total: totalPerUnit
+    },
+    total: totalForQuantity,
+    quantity: input.quantity,
+    currency: &#39;INR&#39;,
+    leadTimeDays: Math.ceil(totalMachiningMinutes * input.quantity / (8 * 60)) // 8-hour workday
+  };
+}
+</code></pre>
+<p><strong>Missing Components:</strong></p>
+<ul>
+<li>❌ Volume calculation from STEP file</li>
+<li>❌ Feature recognition algorithm</li>
+<li>❌ Material properties database</li>
+<li>❌ Machining operation classification</li>
+<li>❌ Setup time estimation</li>
+<li>❌ Tool selection logic</li>
+<li>❌ Surface finish requirements</li>
+<li>❌ Quantity-based pricing tiers</li>
+</ul>
+<h3>6. Payment Integration (DOES NOT EXIST)</h3>
+<p><strong>Status:</strong> 🔴 Critical - Revenue Blocker<br><strong>Current:</strong> Mock payment page<br><strong>Required:</strong> Razorpay integration for INR payments</p>
+<p><strong>Razorpay Implementation:</strong></p>
+<pre><code class="language-typescript">// Backend: Create Razorpay order
+import Razorpay from &#39;razorpay&#39;;
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET
+});
+
+async function createSubscriptionOrder(userId: string, planId: string, couponCode?: string) {
+  // 1. Get plan details
+  const plan = await db.subscription_plans.findUnique({ where: { id: planId } });
+  
+  // 2. Apply coupon if provided
+  let amount = plan.price_inr;
+  if (couponCode) {
+    const coupon = await validateAndApplyCoupon(couponCode, userId, planId);
+    if (coupon.discount_type === &#39;percentage&#39;) {
+      amount = amount * (1 - coupon.discount_value / 100);
+    } else if (coupon.discount_type === &#39;fixed&#39;) {
+      amount = amount - coupon.discount_value;
+    }
+  }
+  
+  // 3. Create Razorpay order
+  const order = await razorpay.orders.create({
+    amount: Math.round(amount * 100), // Convert to paise
+    currency: &#39;INR&#39;,
+    receipt: `order_${userId}_${Date.now()}`,
+    notes: {
+      userId,
+      planId,
+      couponCode: couponCode || null
+    }
+  });
+  
+  // 4. Store order in database
+  await db.payment_orders.create({
+    data: {
+      id: order.id,
+      user_id: userId,
+      plan_id: planId,
+      amount_inr: amount,
+      currency: &#39;INR&#39;,
+      status: &#39;created&#39;,
+      razorpay_order_id: order.id
+    }
+  });
+  
+  return {
+    orderId: order.id,
+    amount,
+    currency: &#39;INR&#39;,
+    key: process.env.RAZORPAY_KEY_ID
+  };
+}
+
+// Frontend: Razorpay checkout
+async function handlePayment() {
+  // 1. Create order on backend
+  const order = await api.post(&#39;/api/payments/create-order&#39;, {
+    planId: selectedPlan,
+    couponCode
+  });
+  
+  // 2. Open Razorpay checkout
+  const options = {
+    key: order.data.key,
+    amount: order.data.amount * 100,
+    currency: &#39;INR&#39;,
+    name: &#39;DataDelimited&#39;,
+    description: &#39;CNC Estimator Subscription&#39;,
+    order_id: order.data.orderId,
+    handler: async function (response: any) {
+      // 3. Verify payment on backend
+      const verification = await api.post(&#39;/api/payments/verify-signature&#39;, {
+        orderId: order.data.orderId,
+        paymentId: response.razorpay_payment_id,
+        signature: response.razorpay_signature
+      });
+      
+      if (verification.data.success) {
+        // Payment successful
+        router.push(&#39;/dashboard?payment=success&#39;);
+      }
+    },
+    prefill: {
+      name: user.name,
+      email: user.email,
+      contact: user.phone
+    },
+    theme: {
+      color: &#39;#F97316&#39; // Orange accent
+    }
+  };
+  
+  const razorpay = new (window as any).Razorpay(options);
+  razorpay.open();
+}
+
+// Backend: Verify payment signature
+function verifyPaymentSignature(orderId: string, paymentId: string, signature: string): boolean {
+  const crypto = require(&#39;crypto&#39;);
+  const text = orderId + &#39;|&#39; + paymentId;
+  const generated_signature = crypto
+    .createHmac(&#39;sha256&#39;, process.env.RAZORPAY_KEY_SECRET)
+    .update(text)
+    .digest(&#39;hex&#39;);
+  
+  return generated_signature === signature;
+}
+
+// Backend: Payment webhook handler
+async function handlePaymentWebhook(req: Request, res: Response) {
+  // 1. Verify webhook signature
+  const webhookSignature = req.headers[&#39;x-razorpay-signature&#39;];
+  const webhookBody = JSON.stringify(req.body);
+  
+  const expectedSignature = crypto
+    .createHmac(&#39;sha256&#39;, process.env.RAZORPAY_WEBHOOK_SECRET)
+    .update(webhookBody)
+    .digest(&#39;hex&#39;);
+  
+  if (webhookSignature !== expectedSignature) {
+    return res.status(400).json({ error: &#39;Invalid signature&#39; });
+  }
+  
+  // 2. Process event
+  const event = req.body.event;
+  const payload = req.body.payload.payment.entity;
+  
+  if (event === &#39;payment.captured&#39;) {
+    // Payment successful
+    await db.payments.update({
+      where: { razorpay_payment_id: payload.id },
+      data: {
+        status: &#39;captured&#39;,
+        captured_at: new Date()
+      }
+    });
+    
+    // Activate subscription
+    await activateSubscription(payload.notes.userId, payload.notes.planId);
+    
+    // Send confirmation email
+    await sendPaymentConfirmationEmail(payload.notes.userId);
+  }
+  
+  res.status(200).json({ received: true });
+}
+</code></pre>
+<p><strong>Webhook Security:</strong></p>
+<ul>
+<li>✅ Verify signature on every webhook</li>
+<li>✅ Use idempotency keys</li>
+<li>✅ Log all webhook events</li>
+<li>✅ Retry failed webhooks</li>
+<li>✅ Alert on payment failures</li>
+</ul>
+<h3>7. Email &amp; SMS Infrastructure (DOES NOT EXIST)</h3>
+<p><strong>Status:</strong> 🔴 Critical - User Communication<br><strong>Current:</strong> No email/SMS capability<br><strong>Required:</strong> SendGrid + Twilio/MSG91 integration</p>
+<p><strong>Email Templates Required:</strong></p>
+<ol>
+<li><strong>Welcome Email</strong> (after registration)</li>
+<li><strong>Email Verification</strong> (with token link)</li>
+<li><strong>OTP Email</strong> (if SMS fails)</li>
+<li><strong>Estimate Ready</strong> (with PDF attachment)</li>
+<li><strong>Payment Success</strong> (with invoice)</li>
+<li><strong>Subscription Renewal Reminder</strong> (7 days before)</li>
+<li><strong>Trial Ending</strong> (3 days before expiration)</li>
+<li><strong>Password Reset</strong> (with secure link)</li>
+</ol>
+<p><strong>SendGrid Implementation:</strong></p>
+<pre><code class="language-typescript">import sgMail from &#39;@sendgrid/mail&#39;;
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
+
+async function sendEmailVerification(userId: string, email: string, name: string) {
+  // 1. Generate verification token
+  const token = jwt.sign({ userId, type: &#39;email_verification&#39; }, process.env.JWT_SECRET, {
+    expiresIn: &#39;24h&#39;
+  });
+  
+  // 2. Store token in database
+  await db.email_verifications.create({
+    data: {
+      user_id: userId,
+      token,
+      expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000)
+    }
+  });
+  
+  // 3. Send email
+  const msg = {
+    to: email,
+    from: &#39;noreply@datadelimited.com&#39;,
+    subject: &#39;Verify your DataDelimited account&#39;,
+    templateId: &#39;d-xxxxxxxxxxxx&#39;, // SendGrid template ID
+    dynamicTemplateData: {
+      name,
+      verificationUrl: `${process.env.APP_URL}/verify-email?token=${token}`
+    }
+  };
+  
+  await sgMail.send(msg);
+}
+
+async function sendEstimateReadyEmail(userId: string, estimateId: string) {
+  const user = await db.users.findUnique({ where: { id: userId } });
+  const estimate = await db.estimates.findUnique({ where: { id: estimateId } });
+  
+  // Generate PDF
+  const pdfBuffer = await generateEstimatePDF(estimateId);
+  
+  const msg = {
+    to: user!.email,
+    from: &#39;noreply@datadelimited.com&#39;,
+    subject: `Your estimate for ${estimate!.project_name} is ready`,
+    templateId: &#39;d-yyyyyyyyyyyy&#39;,
+    dynamicTemplateData: {
+      name: user!.name,
+      projectName: estimate!.project_name,
+      totalCost: estimate!.total_cost_inr,
+      estimateUrl: `${process.env.APP_URL}/estimate/${estimateId}`
+    },
+    attachments: [
+      {
+        content: pdfBuffer.toString(&#39;base64&#39;),
+        filename: `estimate-${estimateId}.pdf`,
+        type: &#39;application/pdf&#39;,
+        disposition: &#39;attachment&#39;
+      }
+    ]
+  };
+  
+  await sgMail.send(msg);
+}
+</code></pre>
+<p><strong>SMS Implementation (Twilio):</strong></p>
+<pre><code class="language-typescript">import twilio from &#39;twilio&#39;;
+
+const client = twilio(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
+
+async function sendOTP(phone: string, otp: string) {
+  await client.messages.create({
+    body: `Your DataDelimited verification code is: ${otp}. Valid for 5 minutes.`,
+    from: process.env.TWILIO_PHONE_NUMBER,
+    to: phone
+  });
+}
+
+// Alternative: MSG91 for India
+async function sendOTPViaMSG91(phone: string, otp: string) {
+  const response = await fetch(&#39;https://api.msg91.com/api/v5/otp&#39;, {
+    method: &#39;POST&#39;,
+    headers: {
+      &#39;authkey&#39;: process.env.MSG91_AUTH_KEY!,
+      &#39;content-type&#39;: &#39;application/json&#39;
+    },
+    body: JSON.stringify({
+      template_id: process.env.MSG91_TEMPLATE_ID,
+      mobile: phone.replace(&#39;+91&#39;, &#39;&#39;),
+      otp
+    })
+  });
+  
+  return response.json();
+}
+</code></pre>
+<p><strong>OTP Generation &amp; Validation:</strong></p>
+<pre><code class="language-typescript">async function generateAndSendOTP(userId: string, phone: string): Promise&lt;void&gt; {
+  // 1. Generate 6-digit OTP
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  
+  // 2. Hash OTP before storing
+  const otpHash = await bcrypt.hash(otp, 10);
+  
+  // 3. Store in database
+  await db.otp_verifications.create({
+    data: {
+      user_id: userId,
+      phone,
+      otp_hash: otpHash,
+      expires_at: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes
+      attempts: 0
+    }
+  });
+  
+  // 4. Send SMS
+  await sendOTP(phone, otp);
+}
+
+async function verifyOTP(userId: string, phone: string, otp: string): Promise&lt;boolean&gt; {
+  // 1. Get latest OTP record
+  const record = await db.otp_verifications.findFirst({
+    where: {
+      user_id: userId,
+      phone,
+      verified: false,
+      expires_at: { gte: new Date() }
+    },
+    orderBy: { created_at: &#39;desc&#39; }
+  });
+  
+  if (!record) {
+    throw new Error(&#39;OTP expired or not found&#39;);
+  }
+  
+  // 2. Check attempt limit
+  if (record.attempts &gt;= 5) {
+    throw new Error(&#39;Too many attempts. Please request a new OTP.&#39;);
+  }
+  
+  // 3. Verify OTP
+  const valid = await bcrypt.compare(otp, record.otp_hash);
+  
+  // 4. Increment attempts
+  await db.otp_verifications.update({
+    where: { id: record.id },
+    data: { attempts: record.attempts + 1 }
+  });
+  
+  if (!valid) {
+    throw new Error(&#39;Invalid OTP&#39;);
+  }
+  
+  // 5. Mark as verified
+  await db.otp_verifications.update({
+    where: { id: record.id },
+    data: { verified: true, verified_at: new Date() }
+  });
+  
+  // 6. Update user
+  await db.users.update({
+    where: { id: userId },
+    data: { phone_verified: true }
+  });
+  
+  return true;
+}
+</code></pre>
+<h3>8. Object Storage (DOES NOT EXIST)</h3>
+<p><strong>Status:</strong> 🔴 Critical - File Persistence<br><strong>Current:</strong> Files accepted but not stored<br><strong>Required:</strong> Azure Blob Storage</p>
+<p><strong>Azure Blob Storage Implementation:</strong></p>
+<pre><code class="language-typescript">import { BlobServiceClient } from &#39;@azure/storage-blob&#39;;
+
+const blobServiceClient = BlobServiceClient.fromConnectionString(
+  process.env.AZURE_STORAGE_CONNECTION_STRING!
+);
+
+async function uploadStepFile(file: Buffer, userId: string, filename: string): Promise&lt;string&gt; {
+  // 1. Get container client
+  const containerName = &#39;step-files&#39;;
+  const containerClient = blobServiceClient.getContainerClient(containerName);
+  
+  // 2. Create unique blob name
+  const timestamp = Date.now();
+  const blobName = `${userId}/${timestamp}-${filename}`;
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+  
+  // 3. Upload file
+  await blockBlobClient.uploadData(file, {
+    blobHTTPHeaders: { blobContentType: &#39;application/octet-stream&#39; }
+  });
+  
+  // 4. Generate SAS URL (valid for 7 days)
+  const expiresOn = new Date();
+  expiresOn.setDate(expiresOn.getDate() + 7);
+  
+  const sasUrl = await blockBlobClient.generateSasUrl({
+    permissions: &#39;r&#39;,
+    expiresOn
+  });
+  
+  // 5. Store metadata in database
+  await db.uploaded_files.create({
+    data: {
+      user_id: userId,
+      filename,
+      blob_name: blobName,
+      blob_url: sasUrl,
+      file_size_bytes: file.length,
+      uploaded_at: new Date()
+    }
+  });
+  
+  return sasUrl;
+}
+
+async function getFileUrl(fileId: string, userId: string): Promise&lt;string&gt; {
+  const file = await db.uploaded_files.findFirst({
+    where: { id: fileId, user_id: userId }
+  });
+  
+  if (!file) {
+    throw new Error(&#39;File not found&#39;);
+  }
+  
+  // Generate new SAS URL if expired
+  const containerClient = blobServiceClient.getContainerClient(&#39;step-files&#39;);
+  const blockBlobClient = containerClient.getBlockBlobClient(file.blob_name);
+  
+  const expiresOn = new Date();
+  expiresOn.setHours(expiresOn.getHours() + 1); // 1 hour validity
+  
+  return await blockBlobClient.generateSasUrl({
+    permissions: &#39;r&#39;,
+    expiresOn
+  });
+}
+</code></pre>
+<p><strong>File Lifecycle Management:</strong></p>
+<pre><code class="language-typescript">// Delete files after 90 days
+async function cleanupOldFiles() {
+  const cutoffDate = new Date();
+  cutoffDate.setDate(cutoffDate.getDate() - 90);
+  
+  const oldFiles = await db.uploaded_files.findMany({
+    where: {
+      uploaded_at: { lte: cutoffDate }
+    }
+  });
+  
+  const containerClient = blobServiceClient.getContainerClient(&#39;step-files&#39;);
+  
+  for (const file of oldFiles) {
+    // Delete from blob storage
+    const blockBlobClient = containerClient.getBlockBlobClient(file.blob_name);
+    await blockBlobClient.deleteIfExists();
+    
+    // Delete from database
+    await db.uploaded_files.delete({ where: { id: file.id } });
+  }
+}
+</code></pre>
+<h3>9. Background Job Processing (DOES NOT EXIST)</h3>
+<p><strong>Status:</strong> 🔴 Critical - Async Operations<br><strong>Current:</strong> No background processing<br><strong>Required:</strong> BullMQ + Redis</p>
+<p><strong>BullMQ Setup:</strong></p>
+<pre><code class="language-typescript">import { Queue, Worker } from &#39;bullmq&#39;;
+import Redis from &#39;ioredis&#39;;
+
+const connection = new Redis({
+  host: process.env.REDIS_HOST,
+  port: parseInt(process.env.REDIS_PORT || &#39;6379&#39;),
+  password: process.env.REDIS_PASSWORD
+});
+
+// Define queues
+const stepProcessingQueue = new Queue(&#39;step-processing&#39;, { connection });
+const emailQueue = new Queue(&#39;email&#39;, { connection });
+const reportGenerationQueue = new Queue(&#39;report-generation&#39;, { connection });
+
+// Add job to queue
+async function queueStepFileProcessing(uploadId: string, userId: string) {
+  await stepProcessingQueue.add(&#39;process-step-file&#39;, {
+    uploadId,
+    userId
+  }, {
+    attempts: 3,
+    backoff: {
+      type: &#39;exponential&#39;,
+      delay: 5000
+    }
+  });
+}
+
+// Worker: Process STEP files
+const stepProcessingWorker = new Worker(&#39;step-processing&#39;, async (job) =&gt; {
+  const { uploadId, userId } = job.data;
+  
+  try {
+    // 1. Get file from blob storage
+    const file = await db.uploaded_files.findUnique({ where: { id: uploadId } });
+    const fileBuffer = await downloadFileFromBlob(file!.blob_name);
+    
+    // 2. Parse STEP file
+    const geometryData = await parseStepFile(fileBuffer);
+    
+    // 3. Extract features
+    const features = await extractFeatures(geometryData);
+    
+    // 4. Calculate cost
+    const estimate = await calculateEstimate(features, userId);
+    
+    // 5. Generate PDF report
+    const pdfBuffer = await generatePDFReport(estimate);
+    const pdfUrl = await uploadPDFToBlob(pdfBuffer, userId, estimate.id);
+    
+    // 6. Update database
+    await db.estimates.update({
+      where: { id: estimate.id },
+      data: {
+        status: &#39;completed&#39;,
+        pdf_url: pdfUrl,
+        completed_at: new Date()
+      }
+    });
+    
+    // 7. Queue email notification
+    await emailQueue.add(&#39;estimate-ready&#39;, {
+      userId,
+      estimateId: estimate.id
+    });
+    
+    return { success: true, estimateId: estimate.id };
+  } catch (error) {
+    // Log error
+    await db.processing_errors.create({
+      data: {
+        upload_id: uploadId,
+        error_message: error.message,
+        stack_trace: error.stack
+      }
+    });
+    
+    // Update estimate status
+    await db.estimates.update({
+      where: { upload_id: uploadId },
+      data: { status: &#39;failed&#39;, error_message: error.message }
+    });
+    
+    throw error; // Will trigger retry
+  }
+}, { connection });
+
+// Worker: Send emails
+const emailWorker = new Worker(&#39;email&#39;, async (job) =&gt; {
+  const { type, userId, estimateId } = job.data;
+  
+  if (type === &#39;estimate-ready&#39;) {
+    await sendEstimateReadyEmail(userId, estimateId);
+  }
+  
+  return { success: true };
+}, { connection });
+
+// Monitor queue health
+stepProcessingQueue.on(&#39;failed&#39;, (job, err) =&gt; {
+  console.error(`Job ${job?.id} failed with error ${err.message}`);
+  // Send alert to admin
+});
+</code></pre>
+<h3>10. Monitoring &amp; Logging (DOES NOT EXIST)</h3>
+<p><strong>Status:</strong> 🔴 Critical - Production Operations<br><strong>Current:</strong> console.log only<br><strong>Required:</strong> Structured logging + APM</p>
+<p><strong>Winston Logging:</strong></p>
+<pre><code class="language-typescript">import winston from &#39;winston&#39;;
+
+const logger = winston.createLogger({
+  level: &#39;info&#39;,
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  defaultMeta: { service: &#39;cnc-estimator-api&#39; },
+  transports: [
+    new winston.transports.File({ filename: &#39;error.log&#39;, level: &#39;error&#39; }),
+    new winston.transports.File({ filename: &#39;combined.log&#39; })
+  ]
+});
+
+if (process.env.NODE_ENV !== &#39;production&#39;) {
+  logger.add(new winston.transports.Console({
+    format: winston.format.simple()
+  }));
+}
+
+// Usage
+logger.info(&#39;User registered&#39;, { userId, email });
+logger.error(&#39;Payment failed&#39;, { userId, orderId, error: error.message });
+</code></pre>
+<p><strong>Sentry Error Tracking:</strong></p>
+<pre><code class="language-typescript">import * as Sentry from &#39;@sentry/node&#39;;
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  environment: process.env.NODE_ENV,
+  tracesSampleRate: 1.0
+});
+
+// Catch all errors
+app.use(Sentry.Handlers.errorHandler());
+</code></pre>
+<hr>
+<h2>Security Assessment</h2>
+<h3>Critical Vulnerabilities</h3>
+<table>
+<thead>
+<tr>
+<th>Vulnerability</th>
+<th>Severity</th>
+<th>Exploitation</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>No server-side authentication</strong></td>
+<td>🔴 Critical</td>
+<td>Anyone can modify localStorage to gain admin access</td>
+<td>Implement JWT with HTTP-only cookies</td>
+</tr>
+<tr>
+<td><strong>No API validation</strong></td>
+<td>🔴 Critical</td>
+<td>No API exists, but when built, must validate all inputs</td>
+<td>Server-side Zod/Joi validation</td>
+</tr>
+<tr>
+<td><strong>No rate limiting</strong></td>
+<td>🔴 Critical</td>
+<td>Brute force attacks possible</td>
+<td>Redis-based rate limiting</td>
+</tr>
+<tr>
+<td><strong>No CSRF protection</strong></td>
+<td>🔴 Critical</td>
+<td>Cross-site request forgery</td>
+<td>CSRF tokens required</td>
+</tr>
+<tr>
+<td><strong>Secrets in UI</strong></td>
+<td>🟡 Medium</td>
+<td>API keys visible in settings page</td>
+<td>Move to environment variables + vault</td>
+</tr>
+<tr>
+<td><strong>No XSS protection</strong></td>
+<td>🟡 Medium</td>
+<td>User input not sanitized</td>
+<td>DOMPurify + Content Security Policy</td>
+</tr>
+<tr>
+<td><strong>No SQL injection protection</strong></td>
+<td>🔴 Critical</td>
+<td>When database added, must use parameterized queries</td>
+<td>Use ORM (Prisma) with prepared statements</td>
+</tr>
+</tbody></table>
+<h3>Security Checklist for Production</h3>
+<p><strong>Authentication &amp; Authorization:</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Implement JWT with refresh tokens</li>
+<li><input disabled="" type="checkbox"> Use HTTP-only, secure cookies</li>
+<li><input disabled="" type="checkbox"> Hash passwords with bcrypt (10+ rounds)</li>
+<li><input disabled="" type="checkbox"> Implement role-based access control (RBAC)</li>
+<li><input disabled="" type="checkbox"> Add route guards on backend</li>
+<li><input disabled="" type="checkbox"> Verify JWT on every API request</li>
+<li><input disabled="" type="checkbox"> Implement token rotation</li>
+<li><input disabled="" type="checkbox"> Add session management</li>
+<li><input disabled="" type="checkbox"> Log all authentication events</li>
+<li><input disabled="" type="checkbox"> Implement account lockout after N failed attempts</li>
+</ul>
+<p><strong>API Security:</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Validate all inputs with Zod/Joi</li>
+<li><input disabled="" type="checkbox"> Sanitize user input (DOMPurify)</li>
+<li><input disabled="" type="checkbox"> Implement rate limiting (Redis)</li>
+<li><input disabled="" type="checkbox"> Add CORS configuration</li>
+<li><input disabled="" type="checkbox"> Use helmet.js for HTTP headers</li>
+<li><input disabled="" type="checkbox"> Implement request size limits</li>
+<li><input disabled="" type="checkbox"> Add API versioning</li>
+<li><input disabled="" type="checkbox"> Use HTTPS only (redirect HTTP)</li>
+<li><input disabled="" type="checkbox"> Implement CSP headers</li>
+<li><input disabled="" type="checkbox"> Add API documentation (Swagger)</li>
+</ul>
+<p><strong>Data Security:</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Enable PostgreSQL encryption at rest</li>
+<li><input disabled="" type="checkbox"> Use TLS 1.3 for all connections</li>
+<li><input disabled="" type="checkbox"> Encrypt PII in database</li>
+<li><input disabled="" type="checkbox"> Use Azure Key Vault for secrets</li>
+<li><input disabled="" type="checkbox"> Implement audit logging</li>
+<li><input disabled="" type="checkbox"> Add data retention policies</li>
+<li><input disabled="" type="checkbox"> Implement GDPR compliance (data export/delete)</li>
+<li><input disabled="" type="checkbox"> Use prepared statements (SQL injection prevention)</li>
+<li><input disabled="" type="checkbox"> Validate file uploads (type, size, malware scan)</li>
+<li><input disabled="" type="checkbox"> Generate secure random tokens (crypto.randomBytes)</li>
+</ul>
+<p><strong>Infrastructure Security:</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Use Azure Front Door with WAF</li>
+<li><input disabled="" type="checkbox"> Enable DDoS protection</li>
+<li><input disabled="" type="checkbox"> Implement IP whitelisting for admin</li>
+<li><input disabled="" type="checkbox"> Use private endpoints for database</li>
+<li><input disabled="" type="checkbox"> Enable Azure Security Center</li>
+<li><input disabled="" type="checkbox"> Implement backup and disaster recovery</li>
+<li><input disabled="" type="checkbox"> Use separate environments (dev/staging/prod)</li>
+<li><input disabled="" type="checkbox"> Rotate secrets regularly</li>
+<li><input disabled="" type="checkbox"> Enable audit logging on all services</li>
+<li><input disabled="" type="checkbox"> Implement intrusion detection</li>
+</ul>
+<hr>
+<h2>Implementation Roadmap</h2>
+<h3>Phase 1: Backend Foundation (Weeks 1-6)</h3>
+<p><strong>Week 1-2: Core Infrastructure</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Set up NestJS project structure</li>
+<li><input disabled="" type="checkbox"> Configure TypeScript + ESLint + Prettier</li>
+<li><input disabled="" type="checkbox"> Set up PostgreSQL database (Azure)</li>
+<li><input disabled="" type="checkbox"> Design database schema (28+ tables)</li>
+<li><input disabled="" type="checkbox"> Implement Prisma ORM</li>
+<li><input disabled="" type="checkbox"> Create database migrations</li>
+<li><input disabled="" type="checkbox"> Set up Redis for caching</li>
+<li><input disabled="" type="checkbox"> Configure environment variables</li>
+<li><input disabled="" type="checkbox"> Set up logging (Winston)</li>
+<li><input disabled="" type="checkbox"> Set up error tracking (Sentry)</li>
+</ul>
+<p><strong>Week 3-4: Authentication &amp; Authorization</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Implement user registration API</li>
+<li><input disabled="" type="checkbox"> Implement login API with JWT</li>
+<li><input disabled="" type="checkbox"> Implement refresh token mechanism</li>
+<li><input disabled="" type="checkbox"> Hash passwords with bcrypt</li>
+<li><input disabled="" type="checkbox"> Implement email verification flow</li>
+<li><input disabled="" type="checkbox"> Implement OTP generation and verification</li>
+<li><input disabled="" type="checkbox"> Implement forgot password flow</li>
+<li><input disabled="" type="checkbox"> Create RBAC middleware</li>
+<li><input disabled="" type="checkbox"> Create route guards (user/admin)</li>
+<li><input disabled="" type="checkbox"> Add session management</li>
+</ul>
+<p><strong>Week 5-6: Core User APIs</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> GET /api/users/me - Get current user</li>
+<li><input disabled="" type="checkbox"> PUT /api/users/me - Update profile</li>
+<li><input disabled="" type="checkbox"> PUT /api/users/me/password - Change password</li>
+<li><input disabled="" type="checkbox"> DELETE /api/users/me - Delete account</li>
+<li><input disabled="" type="checkbox"> GET /api/users/me/subscription - Get subscription</li>
+<li><input disabled="" type="checkbox"> Add input validation (Zod)</li>
+<li><input disabled="" type="checkbox"> Add rate limiting</li>
+<li><input disabled="" type="checkbox"> Write unit tests</li>
+<li><input disabled="" type="checkbox"> Write integration tests</li>
+<li><input disabled="" type="checkbox"> API documentation (Swagger)</li>
+</ul>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>✅ Working backend API</li>
+<li>✅ Database with all tables</li>
+<li>✅ Authentication system</li>
+<li>✅ User profile management</li>
+<li>✅ Test coverage: 80%+</li>
+</ul>
+<h3>Phase 2: File Processing (Weeks 7-10)</h3>
+<p><strong>Week 7-8: Storage &amp; Upload</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Set up Azure Blob Storage</li>
+<li><input disabled="" type="checkbox"> Implement file upload API</li>
+<li><input disabled="" type="checkbox"> Validate file types (.step, .stp only)</li>
+<li><input disabled="" type="checkbox"> Validate file size (max 100MB)</li>
+<li><input disabled="" type="checkbox"> Generate signed URLs</li>
+<li><input disabled="" type="checkbox"> Implement multipart upload</li>
+<li><input disabled="" type="checkbox"> Store file metadata in database</li>
+<li><input disabled="" type="checkbox"> Implement file lifecycle management</li>
+<li><input disabled="" type="checkbox"> Add file deletion endpoint</li>
+<li><input disabled="" type="checkbox"> Test with large files (100MB)</li>
+</ul>
+<p><strong>Week 9-10: STEP Processing</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Integrate STEP file parser (OpenCascade)</li>
+<li><input disabled="" type="checkbox"> Implement feature extraction</li>
+<li><input disabled="" type="checkbox"> Calculate volume and surface area</li>
+<li><input disabled="" type="checkbox"> Detect holes (diameter, depth)</li>
+<li><input disabled="" type="checkbox"> Detect pockets (dimensions)</li>
+<li><input disabled="" type="checkbox"> Detect faces (area)</li>
+<li><input disabled="" type="checkbox"> Set up BullMQ job queue</li>
+<li><input disabled="" type="checkbox"> Create background worker</li>
+<li><input disabled="" type="checkbox"> Implement job retry logic</li>
+<li><input disabled="" type="checkbox"> Add processing error handling</li>
+</ul>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>✅ File upload working</li>
+<li>✅ STEP parser integration</li>
+<li>✅ Feature extraction</li>
+<li>✅ Background job processing</li>
+</ul>
+<h3>Phase 3: Cost Calculation (Weeks 11-16)</h3>
+<p><strong>Week 11-12: Costing Engine Foundation</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Create materials catalog</li>
+<li><input disabled="" type="checkbox"> Implement material cost calculation</li>
+<li><input disabled="" type="checkbox"> Create machine rates database</li>
+<li><input disabled="" type="checkbox"> Implement machining time estimation</li>
+<li><input disabled="" type="checkbox"> Create labor rates configuration</li>
+<li><input disabled="" type="checkbox"> Implement labor cost calculation</li>
+<li><input disabled="" type="checkbox"> Implement setup cost calculation</li>
+<li><input disabled="" type="checkbox"> Test with sample parts</li>
+</ul>
+<p><strong>Week 13-14: Advanced Costing</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Implement overhead allocation</li>
+<li><input disabled="" type="checkbox"> Implement quantity-based pricing</li>
+<li><input disabled="" type="checkbox"> Implement discount logic</li>
+<li><input disabled="" type="checkbox"> Handle currency (INR)</li>
+<li><input disabled="" type="checkbox"> Implement tax calculation</li>
+<li><input disabled="" type="checkbox"> Add tolerance-based pricing</li>
+<li><input disabled="" type="checkbox"> Implement material waste factor</li>
+<li><input disabled="" type="checkbox"> Test edge cases</li>
+</ul>
+<p><strong>Week 15-16: Estimate Generation</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> POST /api/estimates - Create estimate</li>
+<li><input disabled="" type="checkbox"> GET /api/estimates - List estimates</li>
+<li><input disabled="" type="checkbox"> GET /api/estimates/:id - Get details</li>
+<li><input disabled="" type="checkbox"> Implement PDF report generation</li>
+<li><input disabled="" type="checkbox"> Generate itemized breakdown</li>
+<li><input disabled="" type="checkbox"> Store PDF in blob storage</li>
+<li><input disabled="" type="checkbox"> GET /api/estimates/:id/pdf - Download</li>
+<li><input disabled="" type="checkbox"> Add estimate search and filters</li>
+</ul>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>✅ Complete costing engine</li>
+<li>✅ Estimate generation</li>
+<li>✅ PDF report generation</li>
+<li>✅ Cost accuracy: ±5%</li>
+</ul>
+<h3>Phase 4: Payment Integration (Weeks 17-19)</h3>
+<p><strong>Week 17-18: Razorpay Setup</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Set up Razorpay account</li>
+<li><input disabled="" type="checkbox"> Integrate Razorpay SDK</li>
+<li><input disabled="" type="checkbox"> Implement order creation API</li>
+<li><input disabled="" type="checkbox"> Implement payment verification</li>
+<li><input disabled="" type="checkbox"> Implement subscription creation</li>
+<li><input disabled="" type="checkbox"> Handle payment success</li>
+<li><input disabled="" type="checkbox"> Handle payment failure</li>
+<li><input disabled="" type="checkbox"> Test with test credentials</li>
+</ul>
+<p><strong>Week 19: Webhooks &amp; Edge Cases</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Implement webhook endpoint</li>
+<li><input disabled="" type="checkbox"> Verify webhook signatures</li>
+<li><input disabled="" type="checkbox"> Handle subscription activation</li>
+<li><input disabled="" type="checkbox"> Handle subscription renewal</li>
+<li><input disabled="" type="checkbox"> Handle payment refunds</li>
+<li><input disabled="" type="checkbox"> Implement idempotency</li>
+<li><input disabled="" type="checkbox"> Add retry logic</li>
+<li><input disabled="" type="checkbox"> Test webhook scenarios</li>
+</ul>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>✅ Razorpay integration</li>
+<li>✅ Subscription payment flow</li>
+<li>✅ Webhook processing</li>
+<li>✅ Invoice generation</li>
+</ul>
+<h3>Phase 5: Admin Portal (Weeks 20-22)</h3>
+<p><strong>Week 20-21: Admin APIs</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> GET /api/admin/metrics - Dashboard KPIs</li>
+<li><input disabled="" type="checkbox"> GET /api/admin/users - User list</li>
+<li><input disabled="" type="checkbox"> PUT /api/admin/users/:id - Edit user</li>
+<li><input disabled="" type="checkbox"> POST /api/admin/users/:id/suspend</li>
+<li><input disabled="" type="checkbox"> DELETE /api/admin/users/:id - Delete user</li>
+<li><input disabled="" type="checkbox"> GET /api/admin/subscriptions - List subscriptions</li>
+<li><input disabled="" type="checkbox"> GET /api/admin/coupons - List coupons</li>
+<li><input disabled="" type="checkbox"> POST /api/admin/coupons - Create coupon</li>
+<li><input disabled="" type="checkbox"> DELETE /api/admin/coupons/:id</li>
+<li><input disabled="" type="checkbox"> GET /api/admin/settings - System settings</li>
+<li><input disabled="" type="checkbox"> PUT /api/admin/settings - Update settings</li>
+<li><input disabled="" type="checkbox"> GET /api/admin/audit-logs - Audit trail</li>
+</ul>
+<p><strong>Week 22: Dashboard Optimization</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Optimize KPI queries</li>
+<li><input disabled="" type="checkbox"> Implement caching (5 min TTL)</li>
+<li><input disabled="" type="checkbox"> Add real-time updates (optional)</li>
+<li><input disabled="" type="checkbox"> Implement pagination</li>
+<li><input disabled="" type="checkbox"> Add export functionality (CSV)</li>
+<li><input disabled="" type="checkbox"> Performance test with 10K+ users</li>
+</ul>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>✅ Complete admin API</li>
+<li>✅ Real-time metrics</li>
+<li>✅ Audit logging</li>
+<li>✅ System settings management</li>
+</ul>
+<h3>Phase 6: Email &amp; Notifications (Weeks 23-24)</h3>
+<p><strong>Week 23: Email Infrastructure</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Set up SendGrid account</li>
+<li><input disabled="" type="checkbox"> Create email templates</li>
+<li><input disabled="" type="checkbox"> Implement email queue (BullMQ)</li>
+<li><input disabled="" type="checkbox"> Send welcome email</li>
+<li><input disabled="" type="checkbox"> Send email verification</li>
+<li><input disabled="" type="checkbox"> Send estimate ready email</li>
+<li><input disabled="" type="checkbox"> Send payment confirmation</li>
+<li><input disabled="" type="checkbox"> Send trial ending reminder</li>
+<li><input disabled="" type="checkbox"> Test email delivery</li>
+</ul>
+<p><strong>Week 24: SMS Integration</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Set up Twilio/MSG91</li>
+<li><input disabled="" type="checkbox"> Implement OTP delivery</li>
+<li><input disabled="" type="checkbox"> Handle SMS failures (fallback to email)</li>
+<li><input disabled="" type="checkbox"> Implement notification preferences</li>
+<li><input disabled="" type="checkbox"> Add unsubscribe functionality</li>
+<li><input disabled="" type="checkbox"> Test SMS delivery (Indian numbers)</li>
+</ul>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>✅ Email system working</li>
+<li>✅ SMS/OTP delivery</li>
+<li>✅ Notification preferences</li>
+<li>✅ Delivery rate: 99%+</li>
+</ul>
+<h3>Phase 7: Production Deployment (Weeks 25-27)</h3>
+<p><strong>Week 25: Observability</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Set up DataDog/New Relic</li>
+<li><input disabled="" type="checkbox"> Configure APM</li>
+<li><input disabled="" type="checkbox"> Set up log aggregation</li>
+<li><input disabled="" type="checkbox"> Create dashboards</li>
+<li><input disabled="" type="checkbox"> Configure alerting rules</li>
+<li><input disabled="" type="checkbox"> Set up uptime monitoring</li>
+<li><input disabled="" type="checkbox"> Implement health check endpoints</li>
+<li><input disabled="" type="checkbox"> Configure Sentry for errors</li>
+</ul>
+<p><strong>Week 26: CI/CD &amp; Infrastructure</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Set up GitHub Actions</li>
+<li><input disabled="" type="checkbox"> Create deployment pipeline</li>
+<li><input disabled="" type="checkbox"> Configure staging environment</li>
+<li><input disabled="" type="checkbox"> Configure production environment</li>
+<li><input disabled="" type="checkbox"> Set up database migrations</li>
+<li><input disabled="" type="checkbox"> Configure auto-scaling</li>
+<li><input disabled="" type="checkbox"> Set up CDN (Azure Front Door)</li>
+<li><input disabled="" type="checkbox"> Configure SSL certificates</li>
+</ul>
+<p><strong>Week 27: Testing &amp; Launch</strong></p>
+<ul>
+<li><input disabled="" type="checkbox"> Load testing (100+ concurrent users)</li>
+<li><input disabled="" type="checkbox"> Security audit</li>
+<li><input disabled="" type="checkbox"> Penetration testing</li>
+<li><input disabled="" type="checkbox"> Performance optimization</li>
+<li><input disabled="" type="checkbox"> Fix critical bugs</li>
+<li><input disabled="" type="checkbox"> Create runbooks</li>
+<li><input disabled="" type="checkbox"> Train support team</li>
+<li><input disabled="" type="checkbox"> Soft launch with beta users</li>
+</ul>
+<p><strong>Deliverables:</strong></p>
+<ul>
+<li>✅ Production environment live</li>
+<li>✅ Monitoring and alerting</li>
+<li>✅ CI/CD pipeline</li>
+<li>✅ Load tested (100+ users)</li>
+<li>✅ Security audit passed</li>
+</ul>
+<hr>
+<h2>Deployment Architecture</h2>
+<h3>Production Infrastructure</h3>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│            Azure Front Door (CDN + WAF)             │
+│  - SSL Termination                                  │
+│  - DDoS Protection                                  │
+│  - Web Application Firewall                         │
+│  - Static Asset Caching                             │
+└──────────────────┬──────────────────────────────────┘
+                   │
+       ┌───────────┴───────────┐
+       │                       │
+┌──────▼──────────┐    ┌───────▼────────────┐
+│   Frontend      │    │   Backend API      │
+│  (Next.js SSR)  │    │   (NestJS)         │
+│  Azure App      │    │   Azure App        │
+│  Service        │    │   Service          │
+│  - Auto-scale   │    │   - Auto-scale     │
+│  - 2-10         │    │   - 2-20           │
+│    instances    │    │     instances      │
+└─────────────────┘    └───────┬────────────┘
+                               │
+                ┌──────────────┼──────────────┐
+                │              │              │
+         ┌──────▼─────┐ ┌──────▼──────┐ ┌────▼────────┐
+         │ PostgreSQL │ │   Redis     │ │ Azure Blob  │
+         │  Database  │ │   Cache     │ │  Storage    │
+         │  - Primary │ │  - 6GB      │ │  - Hot tier │
+         │  - Replica │ │  - Premium  │ │  - Lifecycle│
+         │  - Backups │ │             │ │    policies │
+         └────────────┘ └─────────────┘ └─────────────┘
+                               │
+                         ┌─────▼─────┐
+                         │  Workers  │
+                         │  (BullMQ) │
+                         │  - STEP   │
+                         │  - Email  │
+                         │  - PDF    │
+                         └───────────┘
+</code></pre>
+<h3>Environment Configuration</h3>
+<h4>Development</h4>
+<ul>
+<li><strong>Frontend:</strong> <a href="http://localhost:3001">http://localhost:3001</a></li>
+<li><strong>Backend:</strong> <a href="http://localhost:3000">http://localhost:3000</a></li>
+<li><strong>Database:</strong> Local PostgreSQL</li>
+<li><strong>Redis:</strong> Local Redis</li>
+<li><strong>Storage:</strong> Local file system or Azure dev</li>
+</ul>
+<h4>Staging</h4>
+<ul>
+<li><strong>Frontend:</strong> <a href="https://staging.datadelimited.com">https://staging.datadelimited.com</a></li>
+<li><strong>Backend:</strong> <a href="https://api-staging.datadelimited.com">https://api-staging.datadelimited.com</a></li>
+<li><strong>Database:</strong> Azure PostgreSQL (Standard)</li>
+<li><strong>Redis:</strong> Azure Cache (Basic)</li>
+<li><strong>Storage:</strong> Azure Blob (staging container)</li>
+</ul>
+<h4>Production</h4>
+<ul>
+<li><strong>Frontend:</strong> <a href="https://app.datadelimited.com">https://app.datadelimited.com</a></li>
+<li><strong>Backend:</strong> <a href="https://api.datadelimited.com">https://api.datadelimited.com</a></li>
+<li><strong>Database:</strong> Azure PostgreSQL (Premium)</li>
+<li><strong>Redis:</strong> Azure Cache (Premium)</li>
+<li><strong>Storage:</strong> Azure Blob (production container)</li>
+</ul>
+<h3>Scaling Strategy</h3>
+<table>
+<thead>
+<tr>
+<th>Load Level</th>
+<th>Users</th>
+<th>Frontend</th>
+<th>Backend</th>
+<th>Database</th>
+<th>Workers</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Low</strong></td>
+<td>0-100</td>
+<td>2 instances</td>
+<td>2 instances</td>
+<td>2 vCores</td>
+<td>1 worker</td>
+</tr>
+<tr>
+<td><strong>Medium</strong></td>
+<td>100-1000</td>
+<td>4 instances</td>
+<td>5 instances</td>
+<td>4 vCores</td>
+<td>3 workers</td>
+</tr>
+<tr>
+<td><strong>High</strong></td>
+<td>1000-10000</td>
+<td>10 instances</td>
+<td>20 instances</td>
+<td>8 vCores + replica</td>
+<td>10 workers</td>
+</tr>
+<tr>
+<td><strong>Very High</strong></td>
+<td>10000+</td>
+<td>Auto-scale</td>
+<td>Auto-scale</td>
+<td>16 vCores + replicas</td>
+<td>Auto-scale</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Appendix: Screenshots</h2>
+<h3>Public Routes</h3>
+<p><strong>1. Landing Page</strong> (<code>docs/architecture/screenshots/01-home.png</code>)</p>
+<ul>
+<li>Hero section with CTA</li>
+<li>Features grid</li>
+<li>Pricing cards</li>
+<li>FAQ section</li>
+</ul>
+<p><strong>2. Registration</strong> (<code>docs/architecture/screenshots/02-register.png</code>)</p>
+<ul>
+<li>Form with validation</li>
+<li>Password strength indicator</li>
+<li>Coupon modal</li>
+</ul>
+<p><strong>3. Login</strong> (<code>docs/architecture/screenshots/03-login.png</code>)</p>
+<ul>
+<li>Email and password fields</li>
+<li>Remember me checkbox</li>
+<li>Forgot password link</li>
+</ul>
+<p><strong>4. Email Verification</strong> (<code>docs/architecture/screenshots/04-verify-email.png</code>)</p>
+<ul>
+<li>Email icon</li>
+<li>Instructions</li>
+<li>Demo skip button</li>
+</ul>
+<p><strong>5. Phone Verification</strong> (<code>docs/architecture/screenshots/05-verify-phone.png</code>)</p>
+<ul>
+<li>6 OTP input cells</li>
+<li>Resend OTP button</li>
+<li>Demo OTP hint</li>
+</ul>
+<p><strong>6. Plan Selection</strong> (<code>docs/architecture/screenshots/06-select-plan.png</code>)</p>
+<ul>
+<li>3 plan cards</li>
+<li>Pricing in INR</li>
+<li>Savings badges</li>
+</ul>
+<p><strong>7. Payment</strong> (<code>docs/architecture/screenshots/07-payment.png</code>)</p>
+<ul>
+<li>Payment form</li>
+<li>Order summary</li>
+</ul>
+<h3>Admin Portal</h3>
+<p><strong>8. Admin Dashboard</strong> (<code>docs/architecture/screenshots/08-admin-dashboard.png</code>)</p>
+<ul>
+<li>4 KPI cards</li>
+<li>System health metrics</li>
+<li>Recent activity</li>
+</ul>
+<p><strong>9. User Management</strong> (<code>docs/architecture/screenshots/09-admin-users.png</code>)</p>
+<ul>
+<li>User table</li>
+<li>Search and filters</li>
+<li>Action menu</li>
+</ul>
+<p><strong>10. Subscriptions</strong> (<code>docs/architecture/screenshots/10-admin-subscriptions.png</code>)</p>
+<ul>
+<li>Subscription list</li>
+<li>Status filters</li>
+</ul>
+<p><strong>11. Coupons</strong> (<code>docs/architecture/screenshots/11-admin-coupons.png</code>)</p>
+<ul>
+<li>Coupon cards</li>
+<li>Usage progress</li>
+<li>Create button</li>
+</ul>
+<p><strong>12. Settings</strong> (<code>docs/architecture/screenshots/12-admin-settings.png</code>)</p>
+<ul>
+<li>System settings</li>
+<li>SMTP configuration</li>
+<li>Payment settings</li>
+</ul>
+<p><strong>13. Audit Logs</strong> (<code>docs/architecture/screenshots/13-admin-audit.png</code>)</p>
+<ul>
+<li>Activity log table</li>
+<li>Filters</li>
+</ul>
+<h3>User Dashboard</h3>
+<p><strong>14. Dashboard</strong> (<code>docs/architecture/screenshots/14-user-dashboard.png</code>)</p>
+<ul>
+<li>Recent estimates</li>
+<li>Quick stats</li>
+<li>Upload CTA</li>
+</ul>
+<p><strong>15. Upload</strong> (<code>docs/architecture/screenshots/15-upload.png</code>)</p>
+<ul>
+<li>Drag &amp; drop zone</li>
+<li>Project details form</li>
+<li>Material selection</li>
+</ul>
+<p><strong>16. History</strong> (<code>docs/architecture/screenshots/16-history.png</code>)</p>
+<ul>
+<li>Estimate list</li>
+<li>Search and filters</li>
+</ul>
+<p><strong>17. Profile</strong> (<code>docs/architecture/screenshots/17-profile.png</code>)</p>
+<ul>
+<li>User details form</li>
+<li>Password change</li>
+</ul>
+<p><strong>18. Subscription</strong> (<code>docs/architecture/screenshots/18-subscription.png</code>)</p>
+<ul>
+<li>Current plan</li>
+<li>Usage stats</li>
+<li>Billing history</li>
+</ul>
+<hr>
+<h2>Conclusion</h2>
+<p>Billet Flow has a <strong>complete, production-ready UI/UX</strong> with excellent design consistency. However, it is <strong>not deployable to production</strong> due to the complete absence of backend infrastructure.</p>
+<p><strong>Key Metrics:</strong></p>
+<ul>
+<li><strong>UI Completion:</strong> 100%</li>
+<li><strong>Backend Completion:</strong> 0%</li>
+<li><strong>Production Readiness:</strong> 15%</li>
+<li><strong>Estimated Time to Production:</strong> 6-7 months</li>
+<li><strong>Estimated Cost:</strong> 2-3 full-time engineers × 6.5 months</li>
+</ul>
+<p><strong>Critical Path:</strong></p>
+<ol>
+<li>Backend API + Database (6 weeks)</li>
+<li>STEP Processing (4 weeks)</li>
+<li>Cost Calculation (6 weeks)</li>
+<li>Payment Integration (3 weeks)</li>
+<li>Production Hardening (5 weeks)</li>
+</ol>
+<p><strong>Next Steps:</strong></p>
+<ol>
+<li>Review this documentation with stakeholders</li>
+<li>Prioritize features based on business value</li>
+<li>Secure budget and resources</li>
+<li>Begin Phase 1: Backend Foundation</li>
+<li>Establish CI/CD pipeline</li>
+<li>Set up monitoring from day one</li>
+</ol>
+<p>This documentation provides a complete blueprint for production implementation.</p>
+<hr>
+<p><strong>Document Version:</strong> 1.0<br><strong>Last Updated:</strong> September 3, 2026<br><strong>Prepared By:</strong> Claude Opus 5 (AI Assistant)<br><strong>Repository:</strong> <a href="https://github.com/datapunchman/Billet-Flow">https://github.com/datapunchman/Billet-Flow</a><br><strong>Contact:</strong> <a href="mailto:support@datadelimited.com">support@datadelimited.com</a></p>
+
+</body>
+</html>
+  
