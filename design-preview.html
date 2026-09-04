@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Design Preview - DataDelimited</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+        * { font-family: 'Inter', sans-serif; }
+
+        .glass {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(249, 115, 22, 0.2);
+        }
+
+        .btn-modern {
+            transition: all 0.3s ease;
+        }
+
+        .btn-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(249, 115, 22, 0.4);
+        }
+    </style>
+</head>
+<body class="bg-[#0F172A] text-white">
+
+    <!-- Modern Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg">
+                    DD
+                </div>
+                <span class="text-xl font-bold">DataDelimited</span>
+            </div>
+            <nav class="hidden md:flex items-center gap-8 text-sm">
+                <a href="#" class="text-gray-300 hover:text-white transition">Features</a>
+                <a href="#" class="text-gray-300 hover:text-white transition">Pricing</a>
+                <a href="#" class="text-gray-300 hover:text-white transition">FAQ</a>
+            </nav>
+            <div class="flex items-center gap-4">
+                <button class="text-sm text-gray-300 hover:text-white transition">Login</button>
+                <button class="px-6 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl font-medium btn-modern">
+                    Start Free Trial
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-4xl mx-auto">
+                <div class="inline-block px-4 py-1.5 bg-orange-500/10 border border-orange-500/20 rounded-full text-orange-400 text-sm font-medium mb-6">
+                    ✨ AI-Powered Manufacturing Estimates
+                </div>
+
+                <h1 class="text-6xl md:text-7xl font-bold mb-6 leading-tight">
+                    Transform Your
+                    <span class="gradient-text block">CNC Estimation</span>
+                    Process
+                </h1>
+
+                <p class="text-xl text-gray-400 mb-10 leading-relaxed max-w-2xl mx-auto">
+                    Generate accurate manufacturing estimates in seconds using advanced AI.
+                    Upload your STEP files and get instant cost breakdowns, machining strategies, and detailed reports.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+                    <button class="px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl font-semibold text-lg btn-modern shadow-lg">
+                        Start Free 30-Day Trial
+                    </button>
+                    <button class="px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-semibold text-lg transition">
+                        Watch Demo
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-center gap-8 text-sm text-gray-400">
+                    <span>✓ No credit card required</span>
+                    <span>✓ 30-day free trial</span>
+                    <span>✓ Cancel anytime</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-12 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="glass rounded-2xl p-6 text-center">
+                    <div class="text-4xl font-bold mb-2 gradient-text">10k+</div>
+                    <div class="text-gray-400">Estimates Generated</div>
+                </div>
+                <div class="glass rounded-2xl p-6 text-center">
+                    <div class="text-4xl font-bold mb-2 gradient-text">95%</div>
+                    <div class="text-gray-400">Accuracy Rate</div>
+                </div>
+                <div class="glass rounded-2xl p-6 text-center">
+                    <div class="text-4xl font-bold mb-2 gradient-text">2 min</div>
+                    <div class="text-gray-400">Average Processing</div>
+                </div>
+                <div class="glass rounded-2xl p-6 text-center">
+                    <div class="text-4xl font-bold mb-2 gradient-text">1000+</div>
+                    <div class="text-gray-400">Active Users</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Powerful Features</h2>
+                <p class="text-xl text-gray-400">Everything you need for accurate CNC estimates</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature Card 1 -->
+                <div class="bg-[#1E293B] rounded-2xl p-8 card-hover border border-white/10">
+                    <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-orange-500/30">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">AI Feature Recognition</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Advanced AI automatically detects holes, pockets, threads, and complex machining features from your STEP files.
+                    </p>
+                </div>
+
+                <!-- Feature Card 2 -->
+                <div class="bg-[#1E293B] rounded-2xl p-8 card-hover border border-white/10">
+                    <div class="w-14 h-14 bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-cyan-500/30">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">Instant Estimates</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Get accurate cost breakdowns, machining time, and material requirements in seconds, not hours.
+                    </p>
+                </div>
+
+                <!-- Feature Card 3 -->
+                <div class="bg-[#1E293B] rounded-2xl p-8 card-hover border border-white/10">
+                    <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-purple-500/30">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">Detailed Analytics</h3>
+                    <p class="text-gray-400 leading-relaxed">
+                        Export comprehensive reports with cost breakdowns, machining strategies, and optimization recommendations.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="glass rounded-3xl p-12 text-center border border-white/10">
+                <h2 class="text-4xl md:text-5xl font-bold mb-6">Ready to Get Started?</h2>
+                <p class="text-xl text-gray-400 mb-8">
+                    Join 1000+ manufacturers already using DataDelimited to streamline their estimation process.
+                </p>
+                <button class="px-10 py-5 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl font-semibold text-lg btn-modern shadow-lg">
+                    Start Your Free Trial Now
+                </button>
+                <p class="text-sm text-gray-500 mt-6">No credit card required • 30-day free trial • Cancel anytime</p>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

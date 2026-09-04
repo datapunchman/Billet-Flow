@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(start http://localhost:3001)",
+      "Bash(curl -s http://localhost:3001/test-tailwind)",
+      "Bash(curl -s \"http://localhost:3001/_next/static/css/app/layout.css\")",
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(curl -s \"http://localhost:3001/_next/static/chunks/%5Broot-of-the-server%5D__1itl5es._.css\")",
+      "Bash(grep -E \"\\\\.grid-cols-3|\\\\.lg\\\\\\\\:grid-cols-12|\\\\.max-w-md\")",
+      "Bash(npm list *)",
+      "Bash(grep -A 3 \"\\\\.lg\\\\\\\\:col-span-5 {\")",
+      "Bash(grep -E \"lg\\\\\\\\:col-span-[0-9]\")",
+      "Bash(curl -s \"http://localhost:3001/\")",
+      "Bash(grep -B 5 \"lg\\\\\\\\:col-span-5\")",
+      "Bash(grep -B 3 \"lg\\\\\\\\:grid-cols-12\")",
+      "Bash(curl -s \"http://localhost:3001/login\")",
+      "Bash(curl -s \"http://localhost:3001/_next/static/chunks/%5Broot-of-the-server%5D__1uc-pyb._.css\")",
+      "Bash(npm install *)",
+      "Bash(node take-screenshots.js)",
+      "Bash(node inspect-styles.js)",
+      "Bash(node take-screenshots-updated.js)",
+      "Bash(node take-screenshots-simple.js)",
+      "Bash(curl -s http://localhost:3001/admin)",
+      "Bash(node take-admin-screenshots.js)",
+      "Bash(node take-final-screenshots.js)",
+      "Bash(node debug-admin.js)",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ]
+  }
+}
