@@ -1,0 +1,604 @@
+[
+  {
+    "url": "http://localhost:3001/",
+    "name": "home",
+    "category": "public",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/01-home.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "Features",
+        "href": "/#features"
+      },
+      {
+        "text": "How It Works",
+        "href": "/#how-it-works"
+      },
+      {
+        "text": "Pricing",
+        "href": "/#pricing"
+      },
+      {
+        "text": "FAQ",
+        "href": "/#faq"
+      },
+      {
+        "text": "Log In",
+        "href": "/login"
+      },
+      {
+        "text": "Start Free Trial",
+        "href": "/register"
+      },
+      {
+        "text": "Start Free 30-Day Trial",
+        "href": "/register"
+      },
+      {
+        "text": "Watch Demo",
+        "href": "#features"
+      },
+      {
+        "text": "Start Free Trial",
+        "href": "/register"
+      },
+      {
+        "text": "Start Free Trial",
+        "href": "/register"
+      },
+      {
+        "text": "Start Free Trial",
+        "href": "/register"
+      },
+      {
+        "text": "Start Free Trial Now",
+        "href": "/register"
+      },
+      {
+        "text": "About",
+        "href": "/about"
+      },
+      {
+        "text": "Blog",
+        "href": "/blog"
+      },
+      {
+        "text": "Careers",
+        "href": "/careers"
+      },
+      {
+        "text": "Features",
+        "href": "/#features"
+      },
+      {
+        "text": "Pricing",
+        "href": "/#pricing"
+      },
+      {
+        "text": "Documentation",
+        "href": "/docs"
+      },
+      {
+        "text": "Help Center",
+        "href": "/help"
+      },
+      {
+        "text": "Guides",
+        "href": "/guides"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/register",
+    "name": "register",
+    "category": "auth",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/02-register.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "Terms of Service",
+        "href": "/terms"
+      },
+      {
+        "text": "Privacy Policy",
+        "href": "/privacy"
+      },
+      {
+        "text": "Login",
+        "href": "/login"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/login",
+    "name": "login",
+    "category": "auth",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/03-login.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "Forgot Password?",
+        "href": "/forgot-password"
+      },
+      {
+        "text": "Sign Up",
+        "href": "/register"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/verify-email",
+    "name": "verify-email",
+    "category": "auth",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/04-verify-email.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "Terms of Service",
+        "href": "/terms"
+      },
+      {
+        "text": "Privacy Policy",
+        "href": "/privacy"
+      },
+      {
+        "text": "Login",
+        "href": "/login"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/verify-phone",
+    "name": "verify-phone",
+    "category": "auth",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/05-verify-phone.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "Terms of Service",
+        "href": "/terms"
+      },
+      {
+        "text": "Privacy Policy",
+        "href": "/privacy"
+      },
+      {
+        "text": "Login",
+        "href": "/login"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/select-plan",
+    "name": "select-plan",
+    "category": "auth",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/06-select-plan.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "← Go Back",
+        "href": "/verify-phone"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/payment",
+    "name": "payment",
+    "category": "auth",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/07-payment.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "← Go Back",
+        "href": "/verify-phone"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/admin",
+    "name": "admin-dashboard",
+    "category": "admin",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/08-admin-dashboard.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/admin"
+      },
+      {
+        "text": "Users",
+        "href": "/admin/users"
+      },
+      {
+        "text": "Subscriptions",
+        "href": "/admin/subscriptions"
+      },
+      {
+        "text": "Coupons",
+        "href": "/admin/coupons"
+      },
+      {
+        "text": "Settings",
+        "href": "/admin/settings"
+      },
+      {
+        "text": "Audit Logs",
+        "href": "/admin/audit"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/admin/users",
+    "name": "admin-users",
+    "category": "admin",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/09-admin-users.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/admin"
+      },
+      {
+        "text": "Users",
+        "href": "/admin/users"
+      },
+      {
+        "text": "Subscriptions",
+        "href": "/admin/subscriptions"
+      },
+      {
+        "text": "Coupons",
+        "href": "/admin/coupons"
+      },
+      {
+        "text": "Settings",
+        "href": "/admin/settings"
+      },
+      {
+        "text": "Audit Logs",
+        "href": "/admin/audit"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/admin/subscriptions",
+    "name": "admin-subscriptions",
+    "category": "admin",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/10-admin-subscriptions.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/admin"
+      },
+      {
+        "text": "Users",
+        "href": "/admin/users"
+      },
+      {
+        "text": "Subscriptions",
+        "href": "/admin/subscriptions"
+      },
+      {
+        "text": "Coupons",
+        "href": "/admin/coupons"
+      },
+      {
+        "text": "Settings",
+        "href": "/admin/settings"
+      },
+      {
+        "text": "Audit Logs",
+        "href": "/admin/audit"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/admin/coupons",
+    "name": "admin-coupons",
+    "category": "admin",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/11-admin-coupons.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/admin"
+      },
+      {
+        "text": "Users",
+        "href": "/admin/users"
+      },
+      {
+        "text": "Subscriptions",
+        "href": "/admin/subscriptions"
+      },
+      {
+        "text": "Coupons",
+        "href": "/admin/coupons"
+      },
+      {
+        "text": "Settings",
+        "href": "/admin/settings"
+      },
+      {
+        "text": "Audit Logs",
+        "href": "/admin/audit"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/admin/settings",
+    "name": "admin-settings",
+    "category": "admin",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/12-admin-settings.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/admin"
+      },
+      {
+        "text": "Users",
+        "href": "/admin/users"
+      },
+      {
+        "text": "Subscriptions",
+        "href": "/admin/subscriptions"
+      },
+      {
+        "text": "Coupons",
+        "href": "/admin/coupons"
+      },
+      {
+        "text": "Settings",
+        "href": "/admin/settings"
+      },
+      {
+        "text": "Audit Logs",
+        "href": "/admin/audit"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/admin/audit",
+    "name": "admin-audit",
+    "category": "admin",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/13-admin-audit.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/admin"
+      },
+      {
+        "text": "Users",
+        "href": "/admin/users"
+      },
+      {
+        "text": "Subscriptions",
+        "href": "/admin/subscriptions"
+      },
+      {
+        "text": "Coupons",
+        "href": "/admin/coupons"
+      },
+      {
+        "text": "Settings",
+        "href": "/admin/settings"
+      },
+      {
+        "text": "Audit Logs",
+        "href": "/admin/audit"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/dashboard",
+    "name": "user-dashboard",
+    "category": "user",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/14-user-dashboard.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/dashboard"
+      },
+      {
+        "text": "Upload",
+        "href": "/upload"
+      },
+      {
+        "text": "History",
+        "href": "/history"
+      },
+      {
+        "text": "Profile",
+        "href": "/profile"
+      },
+      {
+        "text": "Subscription",
+        "href": "/subscription"
+      },
+      {
+        "text": "New Upload",
+        "href": "/upload"
+      },
+      {
+        "text": "Upgrade Now",
+        "href": "/subscription"
+      },
+      {
+        "text": "Upload New FileUpload a STEP file and get instant ",
+        "href": "/upload"
+      },
+      {
+        "text": "View HistoryAccess all your past estimates and dow",
+        "href": "/history"
+      },
+      {
+        "text": "View All →",
+        "href": "/history"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/upload",
+    "name": "upload",
+    "category": "user",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/15-upload.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/dashboard"
+      },
+      {
+        "text": "Upload",
+        "href": "/upload"
+      },
+      {
+        "text": "History",
+        "href": "/history"
+      },
+      {
+        "text": "Profile",
+        "href": "/profile"
+      },
+      {
+        "text": "Subscription",
+        "href": "/subscription"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/history",
+    "name": "history",
+    "category": "user",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/16-history.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/dashboard"
+      },
+      {
+        "text": "Upload",
+        "href": "/upload"
+      },
+      {
+        "text": "History",
+        "href": "/history"
+      },
+      {
+        "text": "Profile",
+        "href": "/profile"
+      },
+      {
+        "text": "Subscription",
+        "href": "/subscription"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/profile",
+    "name": "profile",
+    "category": "user",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/17-profile.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/dashboard"
+      },
+      {
+        "text": "Upload",
+        "href": "/upload"
+      },
+      {
+        "text": "History",
+        "href": "/history"
+      },
+      {
+        "text": "Profile",
+        "href": "/profile"
+      },
+      {
+        "text": "Subscription",
+        "href": "/subscription"
+      }
+    ]
+  },
+  {
+    "url": "http://localhost:3001/subscription",
+    "name": "subscription",
+    "category": "user",
+    "status": 200,
+    "error": null,
+    "screenshot": "docs/architecture/screenshots/18-subscription.png",
+    "pageTitle": "DataDelimited CNC Estimator - AI-Powered Manufacturing Estimates",
+    "links": [
+      {
+        "text": "Dashboard",
+        "href": "/dashboard"
+      },
+      {
+        "text": "Upload",
+        "href": "/upload"
+      },
+      {
+        "text": "History",
+        "href": "/history"
+      },
+      {
+        "text": "Profile",
+        "href": "/profile"
+      },
+      {
+        "text": "Subscription",
+        "href": "/subscription"
+      },
+      {
+        "text": "FAQ",
+        "href": "#"
+      },
+      {
+        "text": "contact support",
+        "href": "#"
+      }
+    ]
+  }
+]
