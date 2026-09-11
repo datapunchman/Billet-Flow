@@ -105,3 +105,139 @@
     padding: 2rem;
   }
 }
+
+/* ====================================================================
+   MANDROK PRODUCT DESIGN SYSTEM
+   Shared tokens for surfaces that carry the Mandrok brand identity
+   (admin portal, sign-in). Additive only — does not touch the marketing
+   pages' existing classes above. Source of truth for the palette:
+   Logo/mandrok-experience/styles-final.css (:root)
+   ==================================================================== */
+
+:root {
+  /* Base palette (1:1 with the Mandrok marketing site) */
+  --mnd-black: #0f1010;
+  --mnd-surface: #17181b;
+  --mnd-surface-2: #1d1f22;
+  --mnd-surface-3: #242629;
+  --mnd-hairline: rgba(250, 250, 250, 0.08);
+  --mnd-hairline-strong: rgba(250, 250, 250, 0.14);
+  --mnd-steel: #8a8d8d;
+  --mnd-steel-dim: #5c5f5f;
+  --mnd-stone: #e5e5e5;
+  --mnd-white: #fafafa;
+
+  /* Accent — flat, single stop. No gradients. */
+  --mnd-accent: #e04700;
+  --mnd-accent-hover: #f2551a;
+  --mnd-accent-dark: #a83800;
+  --mnd-accent-soft: rgba(224, 71, 0, 0.12);
+  --mnd-accent-line: rgba(224, 71, 0, 0.35);
+
+  /* Status — desaturated, technical, used sparingly */
+  --mnd-good: #3fa968;
+  --mnd-good-soft: rgba(63, 169, 104, 0.12);
+  --mnd-warn: #d8a034;
+  --mnd-warn-soft: rgba(216, 160, 52, 0.12);
+  --mnd-bad: #c9503f;
+  --mnd-bad-soft: rgba(201, 80, 63, 0.12);
+  --mnd-info: #4c86ad;
+  --mnd-info-soft: rgba(76, 134, 173, 0.12);
+
+  --mnd-font-display: var(--font-parkinsans), "Parkinsans", -apple-system, sans-serif;
+  --mnd-font-sans: var(--font-inter), "Inter", -apple-system, sans-serif;
+  --mnd-font-mono: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+}
+
+@layer utilities {
+  .mnd-shell {
+    background: var(--mnd-black);
+    color: var(--mnd-white);
+    font-family: var(--mnd-font-sans);
+  }
+
+  .mnd-font-display {
+    font-family: var(--mnd-font-display);
+  }
+
+  .mnd-font-mono {
+    font-family: var(--mnd-font-mono);
+  }
+
+  /* Fine, low-contrast engineering grid used behind admin surfaces */
+  .mnd-grid-bg {
+    background-image:
+      linear-gradient(to right, rgba(250, 250, 250, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(250, 250, 250, 0.035) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: -1px -1px;
+  }
+
+  .mnd-kicker {
+    font-family: var(--mnd-font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mnd-steel);
+  }
+
+  .mnd-card {
+    background: var(--mnd-surface);
+    border: 1px solid var(--mnd-hairline);
+    border-radius: 10px;
+  }
+
+  .mnd-card-raised {
+    background: var(--mnd-surface-2);
+    border: 1px solid var(--mnd-hairline-strong);
+    border-radius: 10px;
+  }
+
+  .mnd-input {
+    background: var(--mnd-black);
+    border: 1px solid var(--mnd-hairline-strong);
+    border-radius: 6px;
+    color: var(--mnd-white);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .mnd-input:focus {
+    outline: none;
+    border-color: var(--mnd-accent);
+    box-shadow: 0 0 0 3px var(--mnd-accent-soft);
+  }
+
+  .mnd-btn-accent {
+    background: var(--mnd-accent);
+    color: var(--mnd-white);
+    font-weight: 600;
+    border-radius: 6px;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+  }
+  .mnd-btn-accent:hover {
+    background: var(--mnd-accent-hover);
+  }
+  .mnd-btn-accent:active {
+    transform: translateY(1px);
+  }
+
+  .mnd-btn-ghost {
+    background: transparent;
+    border: 1px solid var(--mnd-hairline-strong);
+    color: var(--mnd-stone);
+    border-radius: 6px;
+    transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+  }
+  .mnd-btn-ghost:hover {
+    border-color: var(--mnd-hairline-strong);
+    background: var(--mnd-surface-2);
+    color: var(--mnd-white);
+  }
+
+  .mnd-scan-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--mnd-accent), transparent);
+    opacity: 0.5;
+  }
+}

@@ -1,9 +1,67 @@
 "use client";
 
 import { useState } from "react";
-import { Save, RefreshCw } from "lucide-react";
+import { Save } from "lucide-react";
+import { PageHeader, SectionCard, DemoDataTag } from "@/components/shared/primitives";
+import { cn } from "@/lib/utils";
+
+const TABS = ["General", "Integrations", "Feature Flags"] as const;
+type Tab = (typeof TABS)[number];
+
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <label className="mnd-kicker mb-1.5 block">{label}</label>
+      {children}
+    </div>
+  );
+}
+
+function Toggle({
+  checked,
+  onChange,
+  label,
+  description,
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  label: string;
+  description: string;
+}) {
+  return (
+    <div className="flex items-center justify-between py-3">
+      <div>
+        <p className="text-sm font-medium text-[var(--mnd-white)]">{label}</p>
+        <p className="text-xs text-[var(--mnd-steel)]">{description}</p>
+      </div>
+      <button
+        role="switch"
+        aria-checked={checked}
+        onClick={() => onChange(!checked)}
+        className={cn(
+          "relative h-6 w-11 shrink-0 rounded-full transition-colors",
+          checked ? "bg-[var(--mnd-accent)]" : "bg-[var(--mnd-surface-3)]"
+        )}
+      >
+        <span
+          className={cn(
+            "absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform",
+            checked ? "translate-x-[22px]" : "translate-x-0.5"
+          )}
+        />
+      </button>
+    </div>
+  );
+}
 
 export default function SystemSettings() {
+  const [tab, setTab] = useState<Tab>("General");
   const [settings, setSettings] = useState({
     siteName: "DataDelimited CNC Estimator",
     supportEmail: "support@datadelimited.com",
@@ -25,369 +83,192 @@ export default function SystemSettings() {
     requireEmailVerification: true,
   });
 
+  const set = <K extends keyof typeof settings>(key: K, value: (typeof settings)[K]) =>
+    setSettings((s) => ({ ...s, [key]: value }));
+
   const handleSave = () => {
-    // Mock save
-    alert("Settings saved successfully!");
+    alert("Settings saved (demo — no backend write occurs).");
   };
+
+  const inputClass = "mnd-input h-10 w-full px-3 text-sm";
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">System Settings</h1>
-          <p className="text-[#94a3b8]">Configure platform settings and integrations</p>
-        </div>
-        <button
-          onClick={handleSave}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#ff6b35] to-[#f7931e] text-white rounded-lg font-medium hover:opacity-90 transition-opacity"
-        >
-          <Save className="w-4 h-4" />
-          Save Changes
-        </button>
+      <PageHeader
+        eyebrow="Mandrok Admin · Platform"
+        title="System Settings"
+        description="Platform configuration, connected services and feature flags."
+        actions={
+          <>
+            <DemoDataTag />
+            <button
+              onClick={handleSave}
+              className="mnd-btn-accent flex items-center gap-2 px-4 py-2 text-sm"
+            >
+              <Save className="h-4 w-4" />
+              Save Changes
+            </button>
+          </>
+        }
+      />
+
+      <div className="flex gap-1 border-b border-[var(--mnd-hairline)]">
+        {TABS.map((t) => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={cn(
+              "relative px-3 py-2.5 text-sm font-medium transition-colors",
+              tab === t ? "text-[var(--mnd-white)]" : "text-[var(--mnd-steel)] hover:text-[var(--mnd-stone)]"
+            )}
+          >
+            {t}
+            {tab === t && (
+              <span className="absolute inset-x-0 -bottom-px h-0.5 bg-[var(--mnd-accent)]" />
+            )}
+          </button>
+        ))}
       </div>
 
-      {/* General Settings */}
-      <div className="bg-[#1a1f35] border border-[#2d3748] rounded-lg">
-        <div className="p-6 border-b border-[#2d3748]">
-          <h2 className="text-xl font-bold text-white">General Settings</h2>
-        </div>
-        <div className="p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-[#94a3b8] mb-2">
-              Site Name
-            </label>
-            <input
-              type="text"
-              value={settings.siteName}
-              onChange={(e) =>
-                setSettings({ ...settings, siteName: e.target.value })
-              }
-              className="w-full px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-[#94a3b8] mb-2">
-              Support Email
-            </label>
-            <input
-              type="email"
-              value={settings.supportEmail}
-              onChange={(e) =>
-                setSettings({ ...settings, supportEmail: e.target.value })
-              }
-              className="w-full px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-[#94a3b8] mb-2">
-                Max File Size (MB)
-              </label>
-              <input
-                type="number"
-                value={settings.maxFileSize}
-                onChange={(e) =>
-                  setSettings({
-                    ...settings,
-                    maxFileSize: parseInt(e.target.value),
-                  })
-                }
-                className="w-full px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
-              />
+      {tab === "General" && (
+        <SectionCard title="Platform" eyebrow="General">
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <Field label="Site Name">
+                <input
+                  className={inputClass}
+                  value={settings.siteName}
+                  onChange={(e) => set("siteName", e.target.value)}
+                />
+              </Field>
+              <Field label="Support Email">
+                <input
+                  className={inputClass}
+                  type="email"
+                  value={settings.supportEmail}
+                  onChange={(e) => set("supportEmail", e.target.value)}
+                />
+              </Field>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-[#94a3b8] mb-2">
-                Allowed File Types
-              </label>
-              <input
-                type="text"
-                value={settings.allowedFileTypes}
-                onChange={(e) =>
-                  setSettings({ ...settings, allowedFileTypes: e.target.value })
-                }
-                className="w-full px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
-              />
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <Field label="Max File Size (MB)">
+                <input
+                  className={inputClass}
+                  type="number"
+                  value={settings.maxFileSize}
+                  onChange={(e) => set("maxFileSize", parseInt(e.target.value) || 0)}
+                />
+              </Field>
+              <Field label="Allowed File Types">
+                <input
+                  className={inputClass}
+                  value={settings.allowedFileTypes}
+                  onChange={(e) => set("allowedFileTypes", e.target.value)}
+                />
+              </Field>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <Field label="Trial Period (days)">
+                <input
+                  className={inputClass}
+                  type="number"
+                  value={settings.trialDays}
+                  onChange={(e) => set("trialDays", parseInt(e.target.value) || 0)}
+                />
+              </Field>
+              <Field label="Trial Estimate Limit">
+                <input
+                  className={inputClass}
+                  type="number"
+                  value={settings.estimateLimit}
+                  onChange={(e) => set("estimateLimit", parseInt(e.target.value) || 0)}
+                />
+              </Field>
             </div>
           </div>
+        </SectionCard>
+      )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-[#94a3b8] mb-2">
-                Trial Period (days)
-              </label>
-              <input
-                type="number"
-                value={settings.trialDays}
-                onChange={(e) =>
-                  setSettings({
-                    ...settings,
-                    trialDays: parseInt(e.target.value),
-                  })
-                }
-                className="w-full px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
-              />
+      {tab === "Integrations" && (
+        <div className="space-y-6">
+          <SectionCard title="Email (SMTP)" eyebrow="Notifications">
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <Field label="SMTP Host">
+                  <input className={inputClass} value={settings.smtpHost} onChange={(e) => set("smtpHost", e.target.value)} />
+                </Field>
+                <Field label="SMTP Port">
+                  <input
+                    className={inputClass}
+                    type="number"
+                    value={settings.smtpPort}
+                    onChange={(e) => set("smtpPort", parseInt(e.target.value) || 0)}
+                  />
+                </Field>
+              </div>
+              <Field label="SMTP Username">
+                <input className={inputClass} value={settings.smtpUsername} onChange={(e) => set("smtpUsername", e.target.value)} />
+              </Field>
+              <Field label="SMTP Password">
+                <input className={inputClass} type="password" value={settings.smtpPassword} onChange={(e) => set("smtpPassword", e.target.value)} />
+              </Field>
             </div>
+          </SectionCard>
 
-            <div>
-              <label className="block text-sm font-medium text-[#94a3b8] mb-2">
-                Trial Estimate Limit
-              </label>
-              <input
-                type="number"
-                value={settings.estimateLimit}
-                onChange={(e) =>
-                  setSettings({
-                    ...settings,
-                    estimateLimit: parseInt(e.target.value),
-                  })
-                }
-                className="w-full px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
-              />
+          <SectionCard title="Payments (Stripe)" eyebrow="Billing">
+            <div className="space-y-4">
+              <Field label="Publishable Key">
+                <input className={inputClass} value={settings.stripePublicKey} onChange={(e) => set("stripePublicKey", e.target.value)} />
+              </Field>
+              <Field label="Secret Key">
+                <input className={inputClass} type="password" value={settings.stripeSecretKey} onChange={(e) => set("stripeSecretKey", e.target.value)} />
+              </Field>
             </div>
-          </div>
+          </SectionCard>
+
+          <SectionCard title="Storage (Azure Blob)" eyebrow="Infrastructure">
+            <div className="space-y-4">
+              <Field label="Storage Account">
+                <input className={inputClass} value={settings.azureStorageAccount} onChange={(e) => set("azureStorageAccount", e.target.value)} />
+              </Field>
+              <Field label="Access Key">
+                <input className={inputClass} type="password" value={settings.azureStorageKey} onChange={(e) => set("azureStorageKey", e.target.value)} />
+              </Field>
+            </div>
+          </SectionCard>
+
+          <SectionCard title="Feature Recognition (OpenAI)" eyebrow="AI">
+            <Field label="API Key">
+              <input className={inputClass} type="password" value={settings.openaiApiKey} onChange={(e) => set("openaiApiKey", e.target.value)} />
+            </Field>
+          </SectionCard>
         </div>
-      </div>
+      )}
 
-      {/* Email Settings */}
-      <div className="bg-[#1a1f35] border border-[#2d3748] rounded-lg">
-        <div className="p-6 border-b border-[#2d3748]">
-          <h2 className="text-xl font-bold text-white">Email Settings (SMTP)</h2>
-        </div>
-        <div className="p-6 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-[#94a3b8] mb-2">
-                SMTP Host
-              </label>
-              <input
-                type="text"
-                value={settings.smtpHost}
-                onChange={(e) =>
-                  setSettings({ ...settings, smtpHost: e.target.value })
-                }
-                className="w-full px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-[#94a3b8] mb-2">
-                SMTP Port
-              </label>
-              <input
-                type="number"
-                value={settings.smtpPort}
-                onChange={(e) =>
-                  setSettings({
-                    ...settings,
-                    smtpPort: parseInt(e.target.value),
-                  })
-                }
-                className="w-full px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-[#94a3b8] mb-2">
-              SMTP Username
-            </label>
-            <input
-              type="text"
-              value={settings.smtpUsername}
-              onChange={(e) =>
-                setSettings({ ...settings, smtpUsername: e.target.value })
-              }
-              className="w-full px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
+      {tab === "Feature Flags" && (
+        <SectionCard title="Feature Flags" eyebrow="Platform">
+          <div className="divide-y divide-[var(--mnd-hairline)]">
+            <Toggle
+              label="Maintenance Mode"
+              description="Disable user access for scheduled maintenance"
+              checked={settings.maintenanceMode}
+              onChange={(v) => set("maintenanceMode", v)}
+            />
+            <Toggle
+              label="Allow New Signups"
+              description="Enable new user registration"
+              checked={settings.allowSignups}
+              onChange={(v) => set("allowSignups", v)}
+            />
+            <Toggle
+              label="Require Email Verification"
+              description="Users must verify email before accessing the platform"
+              checked={settings.requireEmailVerification}
+              onChange={(v) => set("requireEmailVerification", v)}
             />
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-[#94a3b8] mb-2">
-              SMTP Password
-            </label>
-            <input
-              type="password"
-              value={settings.smtpPassword}
-              onChange={(e) =>
-                setSettings({ ...settings, smtpPassword: e.target.value })
-              }
-              className="w-full px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Payment Settings */}
-      <div className="bg-[#1a1f35] border border-[#2d3748] rounded-lg">
-        <div className="p-6 border-b border-[#2d3748]">
-          <h2 className="text-xl font-bold text-white">Payment Settings (Stripe)</h2>
-        </div>
-        <div className="p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-[#94a3b8] mb-2">
-              Stripe Public Key
-            </label>
-            <input
-              type="text"
-              value={settings.stripePublicKey}
-              onChange={(e) =>
-                setSettings({ ...settings, stripePublicKey: e.target.value })
-              }
-              className="w-full px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-[#94a3b8] mb-2">
-              Stripe Secret Key
-            </label>
-            <input
-              type="password"
-              value={settings.stripeSecretKey}
-              onChange={(e) =>
-                setSettings({ ...settings, stripeSecretKey: e.target.value })
-              }
-              className="w-full px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Storage Settings */}
-      <div className="bg-[#1a1f35] border border-[#2d3748] rounded-lg">
-        <div className="p-6 border-b border-[#2d3748]">
-          <h2 className="text-xl font-bold text-white">Storage Settings (Azure)</h2>
-        </div>
-        <div className="p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-[#94a3b8] mb-2">
-              Storage Account Name
-            </label>
-            <input
-              type="text"
-              value={settings.azureStorageAccount}
-              onChange={(e) =>
-                setSettings({ ...settings, azureStorageAccount: e.target.value })
-              }
-              className="w-full px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-[#94a3b8] mb-2">
-              Storage Access Key
-            </label>
-            <input
-              type="password"
-              value={settings.azureStorageKey}
-              onChange={(e) =>
-                setSettings({ ...settings, azureStorageKey: e.target.value })
-              }
-              className="w-full px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* AI Settings */}
-      <div className="bg-[#1a1f35] border border-[#2d3748] rounded-lg">
-        <div className="p-6 border-b border-[#2d3748]">
-          <h2 className="text-xl font-bold text-white">AI Settings (OpenAI)</h2>
-        </div>
-        <div className="p-6 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-[#94a3b8] mb-2">
-              OpenAI API Key
-            </label>
-            <input
-              type="password"
-              value={settings.openaiApiKey}
-              onChange={(e) =>
-                setSettings({ ...settings, openaiApiKey: e.target.value })
-              }
-              className="w-full px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Feature Flags */}
-      <div className="bg-[#1a1f35] border border-[#2d3748] rounded-lg">
-        <div className="p-6 border-b border-[#2d3748]">
-          <h2 className="text-xl font-bold text-white">Feature Flags</h2>
-        </div>
-        <div className="p-6 space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-white">Maintenance Mode</p>
-              <p className="text-sm text-[#94a3b8]">
-                Disable user access for maintenance
-              </p>
-            </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={settings.maintenanceMode}
-                onChange={(e) =>
-                  setSettings({
-                    ...settings,
-                    maintenanceMode: e.target.checked,
-                  })
-                }
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-[#2d3748] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-[#ff6b35] peer-checked:to-[#f7931e]"></div>
-            </label>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-white">Allow New Signups</p>
-              <p className="text-sm text-[#94a3b8]">
-                Enable new user registration
-              </p>
-            </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={settings.allowSignups}
-                onChange={(e) =>
-                  setSettings({ ...settings, allowSignups: e.target.checked })
-                }
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-[#2d3748] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-[#ff6b35] peer-checked:to-[#f7931e]"></div>
-            </label>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-white">Require Email Verification</p>
-              <p className="text-sm text-[#94a3b8]">
-                Users must verify email before access
-              </p>
-            </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={settings.requireEmailVerification}
-                onChange={(e) =>
-                  setSettings({
-                    ...settings,
-                    requireEmailVerification: e.target.checked,
-                  })
-                }
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-[#2d3748] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-[#ff6b35] peer-checked:to-[#f7931e]"></div>
-            </label>
-          </div>
-        </div>
-      </div>
+        </SectionCard>
+      )}
     </div>
   );
 }

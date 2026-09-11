@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { User, Mail, Phone, Building, Save, Lock, AlertCircle, CheckCircle } from "lucide-react";
+import { User, Mail, Phone, Building, Save, Lock, AlertCircle, CheckCircle2 } from "lucide-react";
+import { PageHeader, SectionCard } from "@/components/shared/primitives";
 
 const profileSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -26,6 +27,40 @@ const passwordSchema = z
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 type PasswordFormData = z.infer<typeof passwordSchema>;
+
+function FieldIcon({
+  icon: Icon,
+  type,
+  placeholder,
+  registration,
+  error,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  type: string;
+  placeholder: string;
+  registration: any;
+  error?: string;
+}) {
+  return (
+    <div>
+      <div className="relative">
+        <Icon className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--mnd-steel-dim)]" />
+        <input
+          type={type}
+          {...registration}
+          className="mnd-input h-11 w-full pl-10 pr-3 text-sm placeholder:text-[var(--mnd-steel-dim)]"
+          placeholder={placeholder}
+        />
+      </div>
+      {error && (
+        <p className="mt-1.5 flex items-center gap-1 text-xs text-[var(--mnd-bad)]">
+          <AlertCircle className="h-3.5 w-3.5" />
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
 
 export default function ProfilePage() {
   const [profileSaved, setProfileSaved] = useState(false);
@@ -68,233 +103,142 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Profile Settings</h1>
-        <p className="text-gray-400">Manage your account information and preferences</p>
-      </div>
+    <div className="mx-auto max-w-4xl space-y-6">
+      <PageHeader
+        eyebrow="Mandrok · Account"
+        title="Profile Settings"
+        description="Manage your account information and preferences."
+      />
 
-      {/* Account Status Card */}
-      <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-2xl p-6">
-        <div className="flex items-start justify-between">
+      {/* Account status */}
+      <SectionCard>
+        <div className="flex items-start justify-between gap-6">
           <div>
-            <h3 className="text-lg font-bold text-white mb-2">Account Status</h3>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <span className="inline-flex items-center px-3 py-1 bg-purple-500/20 text-purple-300 text-sm font-medium rounded-lg border border-purple-500/30">
-                  Trial Account
-                </span>
-                <span className="text-sm text-gray-400">23 days remaining</span>
-              </div>
-              <p className="text-sm text-gray-400">
-                Member since: January 15, 2026
-              </p>
+            <h3 className="mnd-font-display mb-3 text-base font-semibold text-[var(--mnd-white)]">
+              Account Status
+            </h3>
+            <div className="flex items-center gap-2">
+              <span className="rounded border border-[var(--mnd-accent-line)] bg-[var(--mnd-accent-soft)] px-2.5 py-1 text-xs font-medium text-[var(--mnd-accent)]">
+                Trial Account
+              </span>
+              <span className="text-sm text-[var(--mnd-steel)]">23 days remaining</span>
             </div>
+            <p className="mt-2 text-sm text-[var(--mnd-steel-dim)]">Member since January 15, 2026</p>
           </div>
-          <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
-            <User className="w-8 h-8 text-white" />
+          <div className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-md bg-[var(--mnd-surface-2)] sm:flex">
+            <User className="h-6 w-6 text-[var(--mnd-accent)]" />
           </div>
         </div>
-      </div>
+      </SectionCard>
 
-      {/* Profile Information */}
-      <div className="bg-[#13141a] border border-[#1f2937]/50 rounded-2xl p-8">
-        <h2 className="text-xl font-bold text-white mb-6">Profile Information</h2>
-
-        <form onSubmit={handleProfileSubmit(onProfileSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Name */}
+      {/* Profile information */}
+      <SectionCard title="Profile Information" eyebrow="Details">
+        <form onSubmit={handleProfileSubmit(onProfileSubmit)} className="space-y-5">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Full Name *
-              </label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                <input
-                  type="text"
-                  {...registerProfile("name")}
-                  className="w-full pl-11 pr-4 py-3 bg-[#1a1b1e] border border-[#1f2937]/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-orange-500/50 transition-colors"
-                  placeholder="Enter your name"
-                />
-              </div>
-              {profileErrors.name && (
-                <p className="mt-2 text-sm text-red-400 flex items-center gap-1">
-                  <AlertCircle className="w-4 h-4" />
-                  {profileErrors.name.message}
-                </p>
-              )}
+              <label className="mnd-kicker mb-1.5 block">Full Name</label>
+              <FieldIcon
+                icon={User}
+                type="text"
+                placeholder="Enter your name"
+                registration={registerProfile("name")}
+                error={profileErrors.name?.message}
+              />
             </div>
-
-            {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Email Address *
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                <input
-                  type="email"
-                  {...registerProfile("email")}
-                  className="w-full pl-11 pr-4 py-3 bg-[#1a1b1e] border border-[#1f2937]/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-orange-500/50 transition-colors"
-                  placeholder="Enter your email"
-                />
-              </div>
-              {profileErrors.email && (
-                <p className="mt-2 text-sm text-red-400 flex items-center gap-1">
-                  <AlertCircle className="w-4 h-4" />
-                  {profileErrors.email.message}
-                </p>
-              )}
+              <label className="mnd-kicker mb-1.5 block">Email Address</label>
+              <FieldIcon
+                icon={Mail}
+                type="email"
+                placeholder="Enter your email"
+                registration={registerProfile("email")}
+                error={profileErrors.email?.message}
+              />
             </div>
-
-            {/* Phone */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Phone Number *
-              </label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                <input
-                  type="tel"
-                  {...registerProfile("phone")}
-                  className="w-full pl-11 pr-4 py-3 bg-[#1a1b1e] border border-[#1f2937]/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-orange-500/50 transition-colors"
-                  placeholder="Enter your phone"
-                />
-              </div>
-              {profileErrors.phone && (
-                <p className="mt-2 text-sm text-red-400 flex items-center gap-1">
-                  <AlertCircle className="w-4 h-4" />
-                  {profileErrors.phone.message}
-                </p>
-              )}
+              <label className="mnd-kicker mb-1.5 block">Phone Number</label>
+              <FieldIcon
+                icon={Phone}
+                type="tel"
+                placeholder="Enter your phone"
+                registration={registerProfile("phone")}
+                error={profileErrors.phone?.message}
+              />
             </div>
-
-            {/* Company */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Company (Optional)
-              </label>
-              <div className="relative">
-                <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                <input
-                  type="text"
-                  {...registerProfile("company")}
-                  className="w-full pl-11 pr-4 py-3 bg-[#1a1b1e] border border-[#1f2937]/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-orange-500/50 transition-colors"
-                  placeholder="Enter company name"
-                />
-              </div>
+              <label className="mnd-kicker mb-1.5 block">Company (optional)</label>
+              <FieldIcon
+                icon={Building}
+                type="text"
+                placeholder="Enter company name"
+                registration={registerProfile("company")}
+              />
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-4">
+          <div className="flex items-center justify-end gap-4 border-t border-[var(--mnd-hairline)] pt-5">
             {profileSaved && (
-              <div className="flex items-center gap-2 text-green-400 animate-fade-in">
-                <CheckCircle className="w-5 h-5" />
-                <span className="font-medium">Profile updated successfully!</span>
+              <div className="flex items-center gap-1.5 text-sm text-[var(--mnd-good)]">
+                <CheckCircle2 className="h-4 w-4" />
+                Profile updated successfully
               </div>
             )}
-            <button
-              type="submit"
-              className="px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-orange-500/30 transition-all flex items-center gap-2"
-            >
-              <Save className="w-4 h-4" />
+            <button type="submit" className="mnd-btn-accent flex items-center gap-2 px-5 py-2.5 text-sm">
+              <Save className="h-4 w-4" />
               Save Changes
             </button>
           </div>
         </form>
-      </div>
+      </SectionCard>
 
-      {/* Change Password */}
-      <div className="bg-[#13141a] border border-[#1f2937]/50 rounded-2xl p-8">
-        <h2 className="text-xl font-bold text-white mb-6">Change Password</h2>
-
-        <form onSubmit={handlePasswordSubmit(onPasswordSubmit)} className="space-y-6">
-          <div className="space-y-6">
-            {/* Current Password */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Current Password *
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                <input
-                  type="password"
-                  {...registerPassword("currentPassword")}
-                  className="w-full pl-11 pr-4 py-3 bg-[#1a1b1e] border border-[#1f2937]/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-orange-500/50 transition-colors"
-                  placeholder="Enter current password"
-                />
-              </div>
-              {passwordErrors.currentPassword && (
-                <p className="mt-2 text-sm text-red-400 flex items-center gap-1">
-                  <AlertCircle className="w-4 h-4" />
-                  {passwordErrors.currentPassword.message}
-                </p>
-              )}
-            </div>
-
-            {/* New Password */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                New Password *
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                <input
-                  type="password"
-                  {...registerPassword("newPassword")}
-                  className="w-full pl-11 pr-4 py-3 bg-[#1a1b1e] border border-[#1f2937]/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-orange-500/50 transition-colors"
-                  placeholder="Enter new password"
-                />
-              </div>
-              {passwordErrors.newPassword && (
-                <p className="mt-2 text-sm text-red-400 flex items-center gap-1">
-                  <AlertCircle className="w-4 h-4" />
-                  {passwordErrors.newPassword.message}
-                </p>
-              )}
-            </div>
-
-            {/* Confirm Password */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Confirm New Password *
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-                <input
-                  type="password"
-                  {...registerPassword("confirmPassword")}
-                  className="w-full pl-11 pr-4 py-3 bg-[#1a1b1e] border border-[#1f2937]/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-orange-500/50 transition-colors"
-                  placeholder="Confirm new password"
-                />
-              </div>
-              {passwordErrors.confirmPassword && (
-                <p className="mt-2 text-sm text-red-400 flex items-center gap-1">
-                  <AlertCircle className="w-4 h-4" />
-                  {passwordErrors.confirmPassword.message}
-                </p>
-              )}
-            </div>
+      {/* Change password */}
+      <SectionCard title="Change Password" eyebrow="Security">
+        <form onSubmit={handlePasswordSubmit(onPasswordSubmit)} className="space-y-5">
+          <div>
+            <label className="mnd-kicker mb-1.5 block">Current Password</label>
+            <FieldIcon
+              icon={Lock}
+              type="password"
+              placeholder="Enter current password"
+              registration={registerPassword("currentPassword")}
+              error={passwordErrors.currentPassword?.message}
+            />
+          </div>
+          <div>
+            <label className="mnd-kicker mb-1.5 block">New Password</label>
+            <FieldIcon
+              icon={Lock}
+              type="password"
+              placeholder="Enter new password"
+              registration={registerPassword("newPassword")}
+              error={passwordErrors.newPassword?.message}
+            />
+          </div>
+          <div>
+            <label className="mnd-kicker mb-1.5 block">Confirm New Password</label>
+            <FieldIcon
+              icon={Lock}
+              type="password"
+              placeholder="Confirm new password"
+              registration={registerPassword("confirmPassword")}
+              error={passwordErrors.confirmPassword?.message}
+            />
           </div>
 
-          <div className="flex items-center justify-end gap-4">
+          <div className="flex items-center justify-end gap-4 border-t border-[var(--mnd-hairline)] pt-5">
             {passwordSaved && (
-              <div className="flex items-center gap-2 text-green-400 animate-fade-in">
-                <CheckCircle className="w-5 h-5" />
-                <span className="font-medium">Password updated successfully!</span>
+              <div className="flex items-center gap-1.5 text-sm text-[var(--mnd-good)]">
+                <CheckCircle2 className="h-4 w-4" />
+                Password updated successfully
               </div>
             )}
-            <button
-              type="submit"
-              className="px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-medium hover:shadow-lg hover:shadow-orange-500/30 transition-all flex items-center gap-2"
-            >
-              <Lock className="w-4 h-4" />
+            <button type="submit" className="mnd-btn-accent flex items-center gap-2 px-5 py-2.5 text-sm">
+              <Lock className="h-4 w-4" />
               Update Password
             </button>
           </div>
         </form>
-      </div>
+      </SectionCard>
     </div>
   );
 }
