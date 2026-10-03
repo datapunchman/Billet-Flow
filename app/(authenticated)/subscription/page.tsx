@@ -1,282 +1,387 @@
 "use client";
 
-import { useState } from "react";
-import { Check, Zap, Crown, Rocket, Clock, TrendingUp, Upload, FileText } from "lucide-react";
+import { useMemo, useState } from "react";
+import {
+  Check,
+  Zap,
+  Crown,
+  FileText,
+  Clock,
+  TrendingUp,
+  Upload,
+  User,
+  Users,
+  Sparkles,
+  ArrowRight,
+} from "lucide-react";
+import { PageHeader, SectionCard, MeterBar, Pill } from "@/components/shared/primitives";
+import { cn } from "@/lib/utils";
 
-interface Plan {
+interface PlanRow {
   id: string;
-  name: string;
-  price: number;
-  period: string;
-  savings?: string;
-  isPopular?: boolean;
-  gradient: string;
-  icon: any;
-  features: string[];
+  plan: string;
+  group: boolean;
+  licenses: number;
+  /** Canonical billing description — unchanged from Plan Management (ADM-005). */
+  billing: string;
+  /** Presentational-only breakdown of `billing`, no new figures — same source amounts. */
+  priceLabel: string | null;
+  priceSuffix: string;
+  bonus: string | null;
+  trialDays: number;
+  renewal: string;
 }
 
+// Mirrors the plan table in Plan Management (ADM-005). Bonus months, not
+// discounts, are how longer commitments are rewarded (BR-004) — pricing
+// changes here only affect future subscriptions (FR-044).
+const planRows: PlanRow[] = [
+  {
+    id: "monthly",
+    plan: "Monthly",
+    group: false,
+    licenses: 1,
+    billing: "₹1,599 / month",
+    priceLabel: "₹1,599",
+    priceSuffix: "/ month",
+    bonus: null,
+    trialDays: 30,
+    renewal: "Monthly",
+  },
+  {
+    id: "6-month",
+    plan: "6 Month",
+    group: false,
+    licenses: 1,
+    billing: "6 months, one-time",
+    priceLabel: null,
+    priceSuffix: "6 months · one-time commitment",
+    bonus: "+1 month",
+    trialDays: 30,
+    renewal: "Every 7 months",
+  },
+  {
+    id: "12-month",
+    plan: "12 Month",
+    group: false,
+    licenses: 1,
+    billing: "12 months, one-time",
+    priceLabel: null,
+    priceSuffix: "12 months · one-time commitment",
+    bonus: "+3 months",
+    trialDays: 30,
+    renewal: "Every 15 months",
+  },
+  {
+    id: "group-monthly",
+    plan: "Group Monthly",
+    group: true,
+    licenses: 5,
+    billing: "₹5,999 / month",
+    priceLabel: "₹5,999",
+    priceSuffix: "/ month",
+    bonus: null,
+    trialDays: 30,
+    renewal: "Monthly",
+  },
+  {
+    id: "group-6-month",
+    plan: "Group 6 Month",
+    group: true,
+    licenses: 5,
+    billing: "₹5,999 × 6 = ₹35,994, one-time",
+    priceLabel: "₹35,994",
+    priceSuffix: "one-time · 6 months",
+    bonus: "+1 month",
+    trialDays: 30,
+    renewal: "Every 7 months",
+  },
+  {
+    id: "group-12-month",
+    plan: "Group 12 Month",
+    group: true,
+    licenses: 5,
+    billing: "₹5,999 × 12 = ₹71,988, one-time",
+    priceLabel: "₹71,988",
+    priceSuffix: "one-time · 12 months",
+    bonus: "+2 months",
+    trialDays: 30,
+    renewal: "Every 14 months",
+  },
+];
+
+function bonusMonths(bonus: string | null) {
+  if (!bonus) return 0;
+  const match = bonus.match(/\d+/);
+  return match ? parseInt(match[0], 10) : 0;
+}
+
+const included = [
+  { icon: Check, title: "AI Analysis", desc: "Advanced feature detection and cost optimization" },
+  { icon: Zap, title: "Instant Results", desc: "Get estimates in seconds, not hours" },
+  { icon: FileText, title: "Export Reports", desc: "Download detailed PDF and Excel reports" },
+  { icon: Crown, title: "Priority Support", desc: "Get help when you need it" },
+];
+
 export default function SubscriptionPage() {
-  const [plans] = useState<Plan[]>([
-    {
-      id: "monthly",
-      name: "Monthly",
-      price: 99,
-      period: "month",
-      gradient: "from-blue-500 to-cyan-500",
-      icon: Zap,
-      features: [
-        "100 estimates per month",
-        "All file formats supported",
-        "Basic AI analysis",
-        "Email support",
-        "Standard processing speed",
-        "PDF export",
-      ],
-    },
-    {
-      id: "6-month",
-      name: "6 Month Plan",
-      price: 499,
-      period: "6 months",
-      savings: "Save 17%",
-      isPopular: true,
-      gradient: "from-orange-500 to-pink-500",
-      icon: Crown,
-      features: [
-        "300 estimates (50/month)",
-        "All file formats supported",
-        "Advanced AI analysis",
-        "Priority email support",
-        "Fast processing speed",
-        "PDF & Excel export",
-        "+1 month free",
-      ],
-    },
-    {
-      id: "12-month",
-      name: "Annual Plan",
-      price: 899,
-      period: "12 months",
-      savings: "Save 25%",
-      gradient: "from-purple-500 to-indigo-500",
-      icon: Rocket,
-      features: [
-        "500 estimates (42/month)",
-        "All file formats supported",
-        "Premium AI analysis",
-        "24/7 priority support",
-        "Instant processing",
-        "All export formats",
-        "+3 months free",
-        "Dedicated account manager",
-      ],
-    },
-  ]);
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const [tier, setTier] = useState<"individual" | "group">("individual");
+
+  const visibleRows = useMemo(
+    () => planRows.filter((r) => r.group === (tier === "group")),
+    [tier]
+  );
+
+  const bestValueId = useMemo(() => {
+    const withBonus = visibleRows.filter((r) => r.bonus);
+    if (withBonus.length === 0) return null;
+    return withBonus.reduce((best, r) => (bonusMonths(r.bonus) > bonusMonths(best.bonus) ? r : best))
+      .id;
+  }, [visibleRows]);
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
-      {/* Header */}
-      <div className="text-center">
-        <h1 className="text-4xl font-bold text-white mb-3">
-          Choose Your Plan
-        </h1>
-        <p className="text-xl text-gray-400">
-          Unlock unlimited estimates and advanced features
-        </p>
-      </div>
+    <div className="mx-auto max-w-6xl space-y-8">
+      <PageHeader
+        eyebrow="Mandrok · Billing"
+        title="Subscription & Plan"
+        description="Unlock unlimited estimates and advanced manufacturing intelligence."
+      />
 
-      {/* Current Plan Status */}
-      <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 rounded-2xl p-8">
-        <div className="flex items-start justify-between flex-wrap gap-6">
-          <div>
-            <h3 className="text-2xl font-bold text-white mb-3">Current Plan: Trial</h3>
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
-                  <Clock className="w-6 h-6 text-white" />
+      {/* Current plan status */}
+      <SectionCard>
+        <div className="flex flex-wrap items-start justify-between gap-6">
+          <div className="flex-1">
+            <div className="mnd-kicker mb-2">Current Plan</div>
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-[var(--mnd-accent-soft)]">
+                <Clock className="h-[22px] w-[22px] text-[var(--mnd-accent)]" />
+              </div>
+              <div>
+                <h3 className="mnd-font-display text-xl font-semibold text-[var(--mnd-white)]">
+                  Trial
+                </h3>
+                <p className="text-xs text-[var(--mnd-steel)]">
+                  23 days remaining · expires September 26, 2026
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+              <div className="mnd-card p-4">
+                <div className="mb-2 flex items-center gap-2">
+                  <Upload className="h-4 w-4 text-[var(--mnd-steel)]" />
+                  <span className="text-xs text-[var(--mnd-steel)]">Estimates used</span>
                 </div>
-                <div>
-                  <p className="text-lg font-semibold text-white">23 days remaining</p>
-                  <p className="text-sm text-gray-400">Trial expires on September 26, 2026</p>
+                <p className="mnd-font-display text-xl font-semibold text-[var(--mnd-white)]">7 / 10</p>
+                <div className="mt-3">
+                  <MeterBar value={7} max={10} tone="accent" />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-                <div className="bg-[#13141a] border border-[#1f2937]/50 rounded-xl p-4">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Upload className="w-5 h-5 text-purple-400" />
-                    <span className="text-sm text-gray-400">Estimates Used</span>
-                  </div>
-                  <p className="text-2xl font-bold text-white">7 / 10</p>
-                  <div className="mt-3 h-2 bg-[#1a1b1e] rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
-                      style={{ width: "70%" }}
-                    />
-                  </div>
+              <div className="mnd-card p-4">
+                <div className="mb-2 flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-[var(--mnd-steel)]" />
+                  <span className="text-xs text-[var(--mnd-steel)]">Storage used</span>
                 </div>
+                <p className="mnd-font-display text-xl font-semibold text-[var(--mnd-white)]">245 MB</p>
+                <div className="mt-3">
+                  <MeterBar value={49} max={100} tone="info" />
+                </div>
+              </div>
 
-                <div className="bg-[#13141a] border border-[#1f2937]/50 rounded-xl p-4">
-                  <div className="flex items-center gap-3 mb-2">
-                    <FileText className="w-5 h-5 text-cyan-400" />
-                    <span className="text-sm text-gray-400">Storage Used</span>
-                  </div>
-                  <p className="text-2xl font-bold text-white">245 MB</p>
-                  <div className="mt-3 h-2 bg-[#1a1b1e] rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-cyan-500 to-blue-500"
-                      style={{ width: "49%" }}
-                    />
-                  </div>
+              <div className="mnd-card p-4">
+                <div className="mb-2 flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-[var(--mnd-steel)]" />
+                  <span className="text-xs text-[var(--mnd-steel)]">Total saved</span>
                 </div>
-
-                <div className="bg-[#13141a] border border-[#1f2937]/50 rounded-xl p-4">
-                  <div className="flex items-center gap-3 mb-2">
-                    <TrendingUp className="w-5 h-5 text-green-400" />
-                    <span className="text-sm text-gray-400">Total Saved</span>
-                  </div>
-                  <p className="text-2xl font-bold text-white">$4,620</p>
-                  <p className="text-xs text-gray-500 mt-2">vs manual estimation</p>
-                </div>
+                <p className="mnd-font-display text-xl font-semibold text-[var(--mnd-white)]">$4,620</p>
+                <p className="mt-1 text-xs text-[var(--mnd-steel-dim)]">vs. manual estimation</p>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </SectionCard>
 
-      {/* Pricing Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {plans.map((plan, index) => {
-          const Icon = plan.icon;
-          return (
-            <div
-              key={plan.id}
-              className={`
-                relative bg-[#13141a] border rounded-2xl overflow-hidden
-                transition-all hover:-translate-y-2
-                ${plan.isPopular ? "border-orange-500/50 shadow-lg shadow-orange-500/20" : "border-[#1f2937]/50"}
-              `}
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              {plan.isPopular && (
-                <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-orange-500 to-pink-500 text-white text-center py-2 text-sm font-bold">
-                  MOST POPULAR
-                </div>
+      {/* Plans */}
+      <div>
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <div className="mnd-kicker mb-1.5">Plan Management · ADM-005</div>
+            <h2 className="mnd-font-display text-xl font-semibold text-[var(--mnd-white)]">
+              Choose a plan
+            </h2>
+            <p className="mt-1 text-sm text-[var(--mnd-steel)]">
+              Longer commitments earn configurable bonus months, not discounts.
+            </p>
+          </div>
+
+          {/* Tier toggle */}
+          <div className="flex shrink-0 rounded-md border border-[var(--mnd-hairline-strong)] bg-[var(--mnd-surface)] p-1">
+            <button
+              onClick={() => setTier("individual")}
+              className={cn(
+                "flex items-center gap-2 rounded px-4 py-2 text-sm font-medium transition-colors",
+                tier === "individual"
+                  ? "bg-[var(--mnd-surface-3)] text-[var(--mnd-white)]"
+                  : "text-[var(--mnd-steel)] hover:text-[var(--mnd-stone)]"
               )}
+            >
+              <User className="h-3.5 w-3.5" />
+              Individual
+            </button>
+            <button
+              onClick={() => setTier("group")}
+              className={cn(
+                "flex items-center gap-2 rounded px-4 py-2 text-sm font-medium transition-colors",
+                tier === "group"
+                  ? "bg-[var(--mnd-surface-3)] text-[var(--mnd-white)]"
+                  : "text-[var(--mnd-steel)] hover:text-[var(--mnd-stone)]"
+              )}
+            >
+              <Users className="h-3.5 w-3.5" />
+              Group
+            </button>
+          </div>
+        </div>
 
-              <div className={`p-8 ${plan.isPopular ? "pt-14" : ""}`}>
-                {/* Icon */}
-                <div className={`w-16 h-16 bg-gradient-to-br ${plan.gradient} rounded-2xl flex items-center justify-center mb-6 shadow-lg stat-icon`}>
-                  <Icon className="w-8 h-8 text-white" />
-                </div>
-
-                {/* Plan Name */}
-                <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
-
-                {/* Savings Badge */}
-                {plan.savings && (
-                  <span className="inline-block px-3 py-1 bg-green-500/10 text-green-400 text-sm font-medium rounded-lg border border-green-500/20 mb-4">
-                    {plan.savings}
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+          {visibleRows.map((row) => {
+            const chosen = selectedPlan === row.id;
+            const isBest = row.id === bestValueId;
+            return (
+              <div
+                key={row.id}
+                className={cn(
+                  "group relative flex flex-col rounded-lg border p-6 transition-all duration-200",
+                  "hover:-translate-y-1 hover:shadow-[0_12px_32px_-12px_rgba(0,0,0,0.6)]",
+                  isBest
+                    ? "border-[var(--mnd-accent)]/45 bg-[var(--mnd-surface-2)] hover:border-[var(--mnd-accent)]/70"
+                    : "border-[var(--mnd-hairline-strong)] bg-[var(--mnd-surface)] hover:border-[var(--mnd-hairline-strong)]"
+                )}
+              >
+                {isBest && (
+                  <span className="absolute -top-3 left-6 inline-flex items-center gap-1 rounded bg-[var(--mnd-accent)] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white">
+                    <Sparkles className="h-3 w-3" />
+                    Best Value
                   </span>
                 )}
 
-                {/* Price */}
-                <div className="mb-6">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-5xl font-bold text-white">${plan.price}</span>
-                    <span className="text-gray-400">/ {plan.period}</span>
-                  </div>
-                  {plan.period !== "month" && (
-                    <p className="text-sm text-gray-500 mt-2">
-                      ${(plan.price / parseInt(plan.period.split(" ")[0])).toFixed(2)} per month
-                    </p>
-                  )}
+                <div className="mb-5 flex items-center gap-2">
+                  <h3 className="mnd-font-display text-lg font-semibold text-[var(--mnd-white)]">
+                    {row.plan}
+                  </h3>
+                  {row.group && <Pill tone="info">5 seats</Pill>}
                 </div>
 
-                {/* Features */}
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <div className="w-5 h-5 bg-green-500/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <Check className="w-3 h-3 text-green-400" />
-                      </div>
-                      <span className="text-sm text-gray-300">{feature}</span>
-                    </li>
-                  ))}
+                <div className="mb-1">
+                  {row.priceLabel ? (
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="mnd-font-display text-[34px] font-semibold leading-none text-[var(--mnd-white)]">
+                        {row.priceLabel}
+                      </span>
+                      <span className="text-sm text-[var(--mnd-steel)]">{row.priceSuffix}</span>
+                    </div>
+                  ) : (
+                    <div className="mnd-font-display text-lg font-semibold text-[var(--mnd-white)]">
+                      {row.priceSuffix}
+                    </div>
+                  )}
+                </div>
+                <p className="mnd-font-mono mb-6 text-xs text-[var(--mnd-steel-dim)]">{row.billing}</p>
+
+                <ul className="mb-7 flex-1 space-y-3 border-t border-[var(--mnd-hairline)] pt-5 text-sm">
+                  <li className="flex items-center justify-between">
+                    <span className="flex items-center gap-2 text-[var(--mnd-steel)]">
+                      <Users className="h-3.5 w-3.5" />
+                      Licenses
+                    </span>
+                    <span className="text-[var(--mnd-stone)]">
+                      {row.licenses} user{row.licenses > 1 ? "s" : ""}
+                    </span>
+                  </li>
+                  <li className="flex items-center justify-between">
+                    <span className="flex items-center gap-2 text-[var(--mnd-steel)]">
+                      <Sparkles className="h-3.5 w-3.5" />
+                      Bonus
+                    </span>
+                    {row.bonus ? (
+                      <Pill tone="good">{row.bonus}</Pill>
+                    ) : (
+                      <span className="text-[var(--mnd-steel-dim)]">None</span>
+                    )}
+                  </li>
+                  <li className="flex items-center justify-between">
+                    <span className="flex items-center gap-2 text-[var(--mnd-steel)]">
+                      <Clock className="h-3.5 w-3.5" />
+                      Trial
+                    </span>
+                    <span className="text-[var(--mnd-stone)]">{row.trialDays} days</span>
+                  </li>
+                  <li className="flex items-center justify-between">
+                    <span className="flex items-center gap-2 text-[var(--mnd-steel)]">
+                      <TrendingUp className="h-3.5 w-3.5" />
+                      Renews
+                    </span>
+                    <span className="text-right text-[var(--mnd-stone)]">{row.renewal}</span>
+                  </li>
                 </ul>
 
-                {/* CTA Button */}
                 <button
-                  className={`
-                    w-full py-4 rounded-xl font-semibold text-white transition-all
-                    ${
-                      plan.isPopular
-                        ? "bg-gradient-to-r from-orange-500 to-pink-500 hover:shadow-lg hover:shadow-orange-500/30"
-                        : "bg-[#1a1b1e] hover:bg-[#1f2937] border border-[#1f2937]/50"
-                    }
-                  `}
+                  onClick={() => setSelectedPlan(row.id)}
+                  className={cn(
+                    "flex w-full items-center justify-center gap-2 py-2.5 text-sm font-semibold transition-all",
+                    chosen ? "bg-[var(--mnd-accent-soft)] text-[var(--mnd-accent)]" : "mnd-btn-accent"
+                  )}
                 >
-                  {plan.isPopular ? "Upgrade Now" : "Select Plan"}
+                  {chosen ? (
+                    <>
+                      <Check className="h-4 w-4" />
+                      Selected
+                    </>
+                  ) : (
+                    <>
+                      Select plan
+                      <ArrowRight className="h-3.5 w-3.5 opacity-0 transition-opacity group-hover:opacity-100" />
+                    </>
+                  )}
                 </button>
               </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Benefits Section */}
-      <div className="bg-[#13141a] border border-[#1f2937]/50 rounded-2xl p-8">
-        <h2 className="text-2xl font-bold text-white mb-6 text-center">
-          All Plans Include
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="text-center">
-            <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <Check className="w-7 h-7 text-white" />
-            </div>
-            <h4 className="font-semibold text-white mb-2">AI Analysis</h4>
-            <p className="text-sm text-gray-400">Advanced feature detection and cost optimization</p>
-          </div>
-
-          <div className="text-center">
-            <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <Zap className="w-7 h-7 text-white" />
-            </div>
-            <h4 className="font-semibold text-white mb-2">Instant Results</h4>
-            <p className="text-sm text-gray-400">Get estimates in seconds, not hours</p>
-          </div>
-
-          <div className="text-center">
-            <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <FileText className="w-7 h-7 text-white" />
-            </div>
-            <h4 className="font-semibold text-white mb-2">Export Reports</h4>
-            <p className="text-sm text-gray-400">Download detailed PDF and Excel reports</p>
-          </div>
-
-          <div className="text-center">
-            <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <Crown className="w-7 h-7 text-white" />
-            </div>
-            <h4 className="font-semibold text-white mb-2">Priority Support</h4>
-            <p className="text-sm text-gray-400">Get help when you need it</p>
-          </div>
+            );
+          })}
         </div>
+
+        <p className="mt-6 text-xs leading-relaxed text-[var(--mnd-steel-dim)]">
+          Renewal cadence includes bonus months (6-month plans renew after 7 months; Group 12-Month after 14 = 12 + 2).
+          The Group Plan licenses five individually verified users under one organisation subscription. Prices, bonuses,
+          visibility and trial duration are managed in Plan Management (ADM-005); pricing changes affect only future
+          subscriptions (FR-044).
+        </p>
       </div>
 
-      {/* FAQ Note */}
-      <div className="bg-[#13141a] border border-[#1f2937]/50 rounded-2xl p-6 text-center">
-        <p className="text-gray-400">
-          Have questions? Check our{" "}
-          <a href="#" className="text-orange-500 hover:text-orange-400 font-medium">
-            FAQ
-          </a>{" "}
-          or{" "}
-          <a href="#" className="text-orange-500 hover:text-orange-400 font-medium">
-            contact support
-          </a>
-        </p>
+      {/* All plans include */}
+      <SectionCard title="All Plans Include" eyebrow="Benefits">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {included.map((item) => (
+            <div key={item.title} className="text-center">
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-md bg-[var(--mnd-surface-2)]">
+                <item.icon className="h-5 w-5 text-[var(--mnd-accent)]" />
+              </div>
+              <h4 className="mb-1.5 text-sm font-semibold text-[var(--mnd-white)]">{item.title}</h4>
+              <p className="text-xs text-[var(--mnd-steel)]">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </SectionCard>
+
+      <div className="mnd-card p-5 text-center text-sm text-[var(--mnd-steel)]">
+        Have questions? Check our{" "}
+        <a href="#" className="font-medium text-[var(--mnd-accent)] hover:text-[var(--mnd-accent-hover)]">
+          FAQ
+        </a>{" "}
+        or{" "}
+        <a href="#" className="font-medium text-[var(--mnd-accent)] hover:text-[var(--mnd-accent-hover)]">
+          contact support
+        </a>
       </div>
     </div>
   );

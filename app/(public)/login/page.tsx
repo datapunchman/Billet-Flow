@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginFormData } from "@/lib/validations";
 import { mockApi } from "@/lib/mock-api";
 import { setAuthToken, setUser } from "@/lib/auth";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, ArrowRight } from "lucide-react";
+import { MandrokMark } from "@/components/shared/MandrokMark";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -51,61 +51,68 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080C18] flex items-center justify-center p-6">
-      <div className="w-full max-w-md">
-        {/* Logo & Header */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex justify-center mb-6">
-            <Image
-              src="/logo.svg"
-              alt="DataDelimited"
-              width={200}
-              height={50}
-              className="h-10 w-auto"
-            />
+    <div className="mnd-grid-bg relative flex min-h-screen items-center justify-center bg-[var(--mnd-black)] p-6">
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(560px circle at 50% 0%, rgba(224,71,0,0.10), transparent 70%)",
+        }}
+      />
+
+      <div className="relative w-full max-w-md">
+        {/* Brand */}
+        <div className="mb-8 text-center">
+          <Link href="/login" className="inline-flex flex-col items-center gap-3">
+            <MandrokMark className="h-11 w-11 text-[var(--mnd-white)]" />
+            <span className="mnd-font-display text-lg font-semibold tracking-[0.08em] text-[var(--mnd-white)]">
+              MANDROK
+            </span>
           </Link>
-          <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
-          <p className="text-[#B4B9C9]">Sign in to your account</p>
+          <h1 className="mnd-font-display mt-7 text-[28px] font-semibold text-[var(--mnd-white)]">
+            Sign in to your console
+          </h1>
+          <p className="mt-1.5 text-sm text-[var(--mnd-steel)]">
+            Precision, automated. Pick up where you left off.
+          </p>
         </div>
 
-        {/* Login Card */}
-        <div className="bg-[#151C2F] border border-[#2B334A] rounded-2xl p-8">
+        {/* Card */}
+        <div className="mnd-card p-8">
           {error && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-              <p className="text-red-400 text-sm">{error}</p>
+            <div className="mb-6 rounded-md border border-[var(--mnd-bad)]/30 bg-[var(--mnd-bad-soft)] p-3.5">
+              <p className="text-sm text-[var(--mnd-bad)]">{error}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
+              <label htmlFor="email" className="mnd-kicker mb-2 block">
                 Email Address
               </label>
               <input
                 id="email"
                 type="email"
                 placeholder="john@example.com"
-                className="w-full px-4 py-3 bg-[#080C18] border border-[#2B334A] rounded-xl text-white placeholder-[#6B7280] transition-colors focus:outline-none focus:border-[#F59E0B] focus:ring-2 focus:ring-[#F59E0B]/20"
+                className="mnd-input h-12 w-full px-4 text-sm placeholder:text-[var(--mnd-steel-dim)]"
                 {...register("email")}
                 disabled={isLoading}
               />
               {errors.email && (
-                <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>
+                <p className="mt-1.5 text-xs text-[var(--mnd-bad)]">{errors.email.message}</p>
               )}
             </div>
 
-            {/* Password */}
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label htmlFor="password" className="block text-sm font-medium text-white">
+              <div className="mb-2 flex items-center justify-between">
+                <label htmlFor="password" className="mnd-kicker">
                   Password
                 </label>
                 <Link
                   href="/forgot-password"
-                  className="text-sm text-[#F59E0B] hover:text-[#F97316] transition-colors"
+                  className="text-xs font-medium text-[var(--mnd-accent)] hover:text-[var(--mnd-accent-hover)]"
                 >
-                  Forgot Password?
+                  Forgot password?
                 </Link>
               </div>
               <div className="relative">
@@ -113,71 +120,81 @@ export default function LoginPage() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
-                  className="w-full px-4 py-3 bg-[#080C18] border border-[#2B334A] rounded-xl text-white placeholder-[#6B7280] transition-colors focus:outline-none focus:border-[#F59E0B] focus:ring-2 focus:ring-[#F59E0B]/20"
+                  className="mnd-input h-12 w-full px-4 pr-11 text-sm placeholder:text-[var(--mnd-steel-dim)]"
                   {...register("password")}
                   disabled={isLoading}
                 />
                 <button
                   type="button"
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-white transition-colors"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[var(--mnd-steel)] hover:text-[var(--mnd-white)]"
                   onClick={() => setShowPassword(!showPassword)}
+                  tabIndex={-1}
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
               {errors.password && (
-                <p className="text-red-400 text-sm mt-1">{errors.password.message}</p>
+                <p className="mt-1.5 text-xs text-[var(--mnd-bad)]">{errors.password.message}</p>
               )}
             </div>
 
-            {/* Remember Me */}
-            <div className="flex items-center gap-2">
+            <label className="flex items-center gap-2.5">
               <input
-                id="rememberMe"
                 type="checkbox"
-                className="w-4 h-4 rounded border-[#2B334A] bg-[#080C18] text-[#F59E0B] focus:ring-2 focus:ring-[#F59E0B]/20"
+                className="h-4 w-4 rounded border-[var(--mnd-hairline-strong)] bg-[var(--mnd-black)] accent-[var(--mnd-accent)]"
                 {...register("rememberMe")}
                 disabled={isLoading}
               />
-              <label htmlFor="rememberMe" className="text-sm text-[#B4B9C9]">
-                Remember me
-              </label>
-            </div>
+              <span className="text-sm text-[var(--mnd-steel)]">Remember me</span>
+            </label>
 
-            {/* Submit Button */}
             <button
               type="submit"
-              className="w-full py-4 bg-gradient-to-r from-[#F59E0B] to-[#F97316] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-orange-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="mnd-btn-accent flex h-12 w-full items-center justify-center gap-2 text-sm disabled:cursor-not-allowed disabled:opacity-50"
               disabled={isLoading}
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Signing In...
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Signing in…
                 </>
               ) : (
-                "Sign In"
+                <>
+                  Sign In
+                  <ArrowRight className="h-4 w-4" />
+                </>
               )}
             </button>
           </form>
 
-          {/* Register Link */}
           <div className="mt-6 text-center">
-            <p className="text-[#B4B9C9] text-sm">
-              Don't have an account?{" "}
-              <Link href="/register" className="text-[#F59E0B] hover:text-[#F97316] font-medium transition-colors">
+            <p className="text-sm text-[var(--mnd-steel)]">
+              Don&apos;t have an account?{" "}
+              <Link href="/register" className="font-medium text-[var(--mnd-accent)] hover:text-[var(--mnd-accent-hover)]">
                 Sign Up
               </Link>
             </p>
           </div>
+
+          <div className="mt-6 flex items-center justify-center gap-2 border-t border-[var(--mnd-hairline)] pt-5">
+            <span className="mnd-kicker !text-[10px]">Powered by</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.svg" alt="DataDelimited" className="h-4 w-auto opacity-90" />
+          </div>
         </div>
 
-        {/* Demo Credentials */}
-        <div className="mt-4 bg-[#151C2F]/50 border border-[#2B334A]/50 rounded-xl p-4">
-          <p className="text-white text-sm font-semibold mb-2">Demo Credentials</p>
-          <div className="space-y-1 text-xs text-[#6B7280] font-mono">
-            <p>User: john.doe@example.com / password123</p>
-            <p>Admin: admin@datadelimited.com / admin123</p>
+        {/* Demo credentials */}
+        <div className="mnd-card mt-4 p-5">
+          <p className="mnd-kicker mb-3">Demo Access</p>
+          <div className="mnd-font-mono space-y-2 text-xs">
+            <div className="flex items-center justify-between">
+              <span className="text-[var(--mnd-steel)]">User</span>
+              <code className="text-[var(--mnd-stone)]">john.doe@example.com / password123</code>
+            </div>
+            <div className="flex items-center justify-between border-t border-[var(--mnd-hairline)] pt-2">
+              <span className="text-[var(--mnd-steel)]">Admin</span>
+              <code className="text-[var(--mnd-stone)]">admin@datadelimited.com / admin123</code>
+            </div>
           </div>
         </div>
       </div>

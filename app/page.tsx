@@ -1,25 +1,8 @@
-import { MarketingNavbar } from "@/components/marketing/Navbar";
-import { Hero } from "@/components/marketing/Hero";
-import { Stats } from "@/components/marketing/Stats";
-import { Features } from "@/components/marketing/Features";
-import { HowItWorks } from "@/components/marketing/HowItWorks";
-import { Pricing } from "@/components/marketing/Pricing";
-import { FAQ } from "@/components/marketing/FAQ";
-import { FinalCTA } from "@/components/marketing/FinalCTA";
-import { Footer } from "@/components/marketing/Footer";
+import { redirect } from "next/navigation";
 
-export default function LandingPage() {
-  return (
-    <div className="min-h-screen bg-[#080C18]">
-      <MarketingNavbar />
-      <Hero />
-      <Stats />
-      <Features />
-      <HowItWorks />
-      <Pricing />
-      <FAQ />
-      <FinalCTA />
-      <Footer />
-    </div>
-  );
+// The marketing landing page lives at Logo/mandrok-experience/index-final.html
+// (the actual Mandrok site) — this app only serves the product itself, so its
+// root simply sends visitors to sign in.
+export default function RootPage() {
+  redirect("/login");
 }

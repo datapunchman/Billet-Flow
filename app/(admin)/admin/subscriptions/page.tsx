@@ -1,358 +1,164 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { Search } from "lucide-react";
 import {
-  Search,
-  DollarSign,
-  TrendingUp,
-  Calendar,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-} from "lucide-react";
+  PageHeader,
+  SectionCard,
+  KpiTile,
+  StatusTag,
+  MeterBar,
+  EmptyRow,
+  DemoDataTag,
+} from "@/components/shared/primitives";
+import { adminSubscriptions, type AdminSubscriptionRow } from "@/lib/admin-mock";
 
-interface Subscription {
-  id: string;
-  userId: string;
-  userName: string;
-  userEmail: string;
-  plan: "monthly" | "6-month" | "12-month";
-  status: "active" | "cancelled" | "expired" | "payment_failed";
-  amount: number;
-  startDate: string;
-  endDate: string;
-  nextBillingDate: string;
-  estimatesUsed: number;
-  estimatesLimit: number;
-}
+const statusTone: Record<AdminSubscriptionRow["status"], "good" | "neutral" | "bad" | "warn"> = {
+  active: "good",
+  cancelled: "neutral",
+  expired: "bad",
+  payment_failed: "warn",
+};
+
+const statusLabel: Record<AdminSubscriptionRow["status"], string> = {
+  active: "Active",
+  cancelled: "Cancelled",
+  expired: "Expired",
+  payment_failed: "Payment failed",
+};
+
+const planLabel: Record<AdminSubscriptionRow["plan"], string> = {
+  monthly: "Monthly",
+  "6-month": "6 Month",
+  "12-month": "12 Month",
+};
 
 export default function SubscriptionsManagement() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [planFilter, setPlanFilter] = useState<string>("all");
 
-  const [subscriptions, setSubscriptions] = useState<Subscription[]>([
-    {
-      id: "sub_1",
-      userId: "1",
-      userName: "John Doe",
-      userEmail: "john.doe@example.com",
-      plan: "12-month",
-      status: "active",
-      amount: 899,
-      startDate: "2026-01-15",
-      endDate: "2027-01-15",
-      nextBillingDate: "2027-01-15",
-      estimatesUsed: 124,
-      estimatesLimit: 500,
-    },
-    {
-      id: "sub_2",
-      userId: "2",
-      userName: "Sarah Smith",
-      userEmail: "sarah.smith@company.com",
-      plan: "monthly",
-      status: "active",
-      amount: 99,
-      startDate: "2026-03-22",
-      endDate: "2026-10-22",
-      nextBillingDate: "2026-10-22",
-      estimatesUsed: 56,
-      estimatesLimit: 100,
-    },
-    {
-      id: "sub_3",
-      userId: "4",
-      userName: "Lisa Brown",
-      userEmail: "lisa.brown@manufacturing.com",
-      plan: "6-month",
-      status: "active",
-      amount: 499,
-      startDate: "2026-02-10",
-      endDate: "2026-08-10",
-      nextBillingDate: "2026-08-10",
-      estimatesUsed: 89,
-      estimatesLimit: 300,
-    },
-    {
-      id: "sub_4",
-      userId: "5",
-      userName: "David Wilson",
-      userEmail: "david.wilson@corp.com",
-      plan: "monthly",
-      status: "payment_failed",
-      amount: 99,
-      startDate: "2026-05-18",
-      endDate: "2026-06-18",
-      nextBillingDate: "2026-09-18",
-      estimatesUsed: 12,
-      estimatesLimit: 100,
-    },
-    {
-      id: "sub_5",
-      userId: "6",
-      userName: "Tom Harris",
-      userEmail: "tom.harris@example.com",
-      plan: "12-month",
-      status: "cancelled",
-      amount: 899,
-      startDate: "2025-12-01",
-      endDate: "2026-12-01",
-      nextBillingDate: "-",
-      estimatesUsed: 245,
-      estimatesLimit: 500,
-    },
-  ]);
+  const filtered = useMemo(
+    () =>
+      adminSubscriptions.filter((sub) => {
+        const matchesSearch =
+          sub.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          sub.userEmail.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesStatus = statusFilter === "all" || sub.status === statusFilter;
+        const matchesPlan = planFilter === "all" || sub.plan === planFilter;
+        return matchesSearch && matchesStatus && matchesPlan;
+      }),
+    [searchQuery, statusFilter, planFilter]
+  );
 
-  const filteredSubscriptions = subscriptions.filter((sub) => {
-    const matchesSearch =
-      sub.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sub.userEmail.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === "all" || sub.status === statusFilter;
-    const matchesPlan = planFilter === "all" || sub.plan === planFilter;
-    return matchesSearch && matchesStatus && matchesPlan;
-  });
-
-  const getStatusBadge = (status: Subscription["status"]) => {
-    switch (status) {
-      case "active":
-        return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#10b981]/10 text-[#10b981] text-xs font-medium rounded">
-            <CheckCircle className="w-3 h-3" />
-            Active
-          </span>
-        );
-      case "cancelled":
-        return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#64748b]/10 text-[#64748b] text-xs font-medium rounded">
-            <XCircle className="w-3 h-3" />
-            Cancelled
-          </span>
-        );
-      case "expired":
-        return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#ef4444]/10 text-[#ef4444] text-xs font-medium rounded">
-            <XCircle className="w-3 h-3" />
-            Expired
-          </span>
-        );
-      case "payment_failed":
-        return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-[#f59e0b]/10 text-[#f59e0b] text-xs font-medium rounded">
-            <AlertCircle className="w-3 h-3" />
-            Payment Failed
-          </span>
-        );
-    }
-  };
-
-  const getPlanBadge = (plan: Subscription["plan"]) => {
-    const planLabels = {
-      monthly: "Monthly",
-      "6-month": "6 Month",
-      "12-month": "12 Month",
-    };
-    return (
-      <span className="px-2 py-1 bg-[#3b82f6]/10 text-[#3b82f6] text-xs font-medium rounded">
-        {planLabels[plan]}
-      </span>
-    );
-  };
-
-  const totalRevenue = subscriptions
+  const monthlyRevenue = adminSubscriptions
     .filter((s) => s.status === "active")
     .reduce((sum, s) => sum + s.amount, 0);
-  const activeCount = subscriptions.filter((s) => s.status === "active").length;
-  const cancelledCount = subscriptions.filter(
-    (s) => s.status === "cancelled"
-  ).length;
-  const failedCount = subscriptions.filter(
-    (s) => s.status === "payment_failed"
-  ).length;
+  const activeCount = adminSubscriptions.filter((s) => s.status === "active").length;
+  const cancelledCount = adminSubscriptions.filter((s) => s.status === "cancelled").length;
+  const failedCount = adminSubscriptions.filter((s) => s.status === "payment_failed").length;
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">
-          Subscription Management
-        </h1>
-        <p className="text-[#94a3b8]">
-          Monitor and manage user subscriptions and billing
-        </p>
+      <PageHeader
+        eyebrow="Mandrok Admin · Billing"
+        title="Subscription Management"
+        description="Monitor plan status, usage against quota and billing exceptions."
+        actions={<DemoDataTag />}
+      />
+
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <KpiTile label="Monthly Revenue" value={`$${monthlyRevenue.toLocaleString("en-US")}`} sublabel="From active plans" />
+        <KpiTile label="Active" value={String(activeCount)} sublabel="Billing normally" />
+        <KpiTile label="Cancelled" value={String(cancelledCount)} sublabel="No longer renewing" />
+        <KpiTile label="Payment Failed" value={String(failedCount)} sublabel="Needs follow-up" />
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-[#1a1f35] border border-[#2d3748] rounded-lg p-6">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-[#10b981]/10 rounded-lg">
-              <DollarSign className="w-5 h-5 text-[#10b981]" />
-            </div>
-            <p className="text-sm text-[#94a3b8]">Monthly Revenue</p>
-          </div>
-          <p className="text-2xl font-bold text-white">
-            ${totalRevenue.toLocaleString()}
-          </p>
-        </div>
-
-        <div className="bg-[#1a1f35] border border-[#2d3748] rounded-lg p-6">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-[#3b82f6]/10 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-[#3b82f6]" />
-            </div>
-            <p className="text-sm text-[#94a3b8]">Active</p>
-          </div>
-          <p className="text-2xl font-bold text-white">{activeCount}</p>
-        </div>
-
-        <div className="bg-[#1a1f35] border border-[#2d3748] rounded-lg p-6">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-[#64748b]/10 rounded-lg">
-              <XCircle className="w-5 h-5 text-[#64748b]" />
-            </div>
-            <p className="text-sm text-[#94a3b8]">Cancelled</p>
-          </div>
-          <p className="text-2xl font-bold text-white">{cancelledCount}</p>
-        </div>
-
-        <div className="bg-[#1a1f35] border border-[#2d3748] rounded-lg p-6">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-[#f59e0b]/10 rounded-lg">
-              <AlertCircle className="w-5 h-5 text-[#f59e0b]" />
-            </div>
-            <p className="text-sm text-[#94a3b8]">Payment Failed</p>
-          </div>
-          <p className="text-2xl font-bold text-white">{failedCount}</p>
-        </div>
-      </div>
-
-      {/* Filters */}
-      <div className="bg-[#1a1f35] border border-[#2d3748] rounded-lg p-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Search */}
+      <SectionCard padded={false}>
+        <div className="grid grid-cols-1 gap-3 border-b border-[var(--mnd-hairline)] p-4 md:grid-cols-3">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#94a3b8]" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--mnd-steel-dim)]" />
             <input
               type="text"
-              placeholder="Search subscriptions..."
+              placeholder="Search by account…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white placeholder-[#64748b] focus:outline-none focus:border-[#ff6b35]"
+              className="mnd-input h-10 w-full pl-9 pr-3 text-sm"
             />
           </div>
-
-          {/* Status Filter */}
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
+            className="mnd-input h-10 px-3 text-sm"
           >
-            <option value="all">All Status</option>
+            <option value="all">All status</option>
             <option value="active">Active</option>
             <option value="cancelled">Cancelled</option>
             <option value="expired">Expired</option>
-            <option value="payment_failed">Payment Failed</option>
+            <option value="payment_failed">Payment failed</option>
           </select>
-
-          {/* Plan Filter */}
           <select
             value={planFilter}
             onChange={(e) => setPlanFilter(e.target.value)}
-            className="px-4 py-2 bg-[#0a0e27] border border-[#2d3748] rounded-lg text-white focus:outline-none focus:border-[#ff6b35]"
+            className="mnd-input h-10 px-3 text-sm"
           >
-            <option value="all">All Plans</option>
+            <option value="all">All plans</option>
             <option value="monthly">Monthly</option>
             <option value="6-month">6 Month</option>
             <option value="12-month">12 Month</option>
           </select>
         </div>
-      </div>
 
-      {/* Subscriptions Table */}
-      <div className="bg-[#1a1f35] border border-[#2d3748] rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-[#0a0e27] border-b border-[#2d3748]">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#94a3b8] uppercase tracking-wider">
-                  User
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#94a3b8] uppercase tracking-wider">
-                  Plan
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#94a3b8] uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#94a3b8] uppercase tracking-wider">
-                  Amount
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#94a3b8] uppercase tracking-wider">
-                  Usage
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#94a3b8] uppercase tracking-wider">
-                  Next Billing
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-[#94a3b8] uppercase tracking-wider">
-                  Actions
-                </th>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-[var(--mnd-hairline)] text-left">
+                <th className="mnd-kicker px-5 py-3 font-medium">Account</th>
+                <th className="mnd-kicker px-5 py-3 font-medium">Plan</th>
+                <th className="mnd-kicker px-5 py-3 font-medium">Status</th>
+                <th className="mnd-kicker px-5 py-3 font-medium">Amount</th>
+                <th className="mnd-kicker px-5 py-3 font-medium">Estimate usage</th>
+                <th className="mnd-kicker px-5 py-3 font-medium">Next billing</th>
+                <th className="mnd-kicker px-5 py-3 text-right font-medium">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#2d3748]">
-              {filteredSubscriptions.map((sub) => (
-                <tr key={sub.id} className="hover:bg-[#0a0e27] transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div>
-                      <p className="text-sm font-medium text-white">
-                        {sub.userName}
-                      </p>
-                      <p className="text-xs text-[#94a3b8]">{sub.userEmail}</p>
-                    </div>
+            <tbody className="divide-y divide-[var(--mnd-hairline)]">
+              {filtered.map((sub) => (
+                <tr key={sub.id} className="hover:bg-[var(--mnd-surface-2)]/60">
+                  <td className="px-5 py-3.5">
+                    <p className="font-medium text-[var(--mnd-white)]">{sub.userName}</p>
+                    <p className="text-xs text-[var(--mnd-steel-dim)]">{sub.userEmail}</p>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {getPlanBadge(sub.plan)}
+                  <td className="px-5 py-3.5 text-[var(--mnd-stone)]">{planLabel[sub.plan]}</td>
+                  <td className="px-5 py-3.5">
+                    <StatusTag tone={statusTone[sub.status]}>{statusLabel[sub.status]}</StatusTag>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {getStatusBadge(sub.status)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm font-medium text-white">
-                      ${sub.amount}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="mnd-font-mono px-5 py-3.5 text-[var(--mnd-white)]">${sub.amount}</td>
+                  <td className="px-5 py-3.5">
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 h-2 bg-[#0a0e27] rounded-full overflow-hidden max-w-[100px]">
-                        <div
-                          className="h-full bg-gradient-to-r from-[#ff6b35] to-[#f7931e]"
-                          style={{
-                            width: `${(sub.estimatesUsed / sub.estimatesLimit) * 100}%`,
-                          }}
-                        />
+                      <div className="w-24">
+                        <MeterBar value={sub.estimatesUsed} max={sub.estimatesLimit} tone="accent" />
                       </div>
-                      <span className="text-xs text-[#94a3b8] whitespace-nowrap">
+                      <span className="mnd-font-mono text-xs text-[var(--mnd-steel)]">
                         {sub.estimatesUsed}/{sub.estimatesLimit}
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm text-[#94a3b8]">
-                      {sub.nextBillingDate !== "-"
-                        ? new Date(sub.nextBillingDate).toLocaleDateString()
-                        : "-"}
-                    </span>
+                  <td className="px-5 py-3.5 text-[var(--mnd-steel)]">
+                    {sub.nextBillingDate !== "-" ? new Date(sub.nextBillingDate).toLocaleDateString("en-US") : "—"}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <button className="px-3 py-1 text-xs text-[#ff6b35] hover:bg-[#2d3748] rounded transition-colors">
-                      View Details
+                  <td className="px-5 py-3.5 text-right">
+                    <button className="text-xs font-medium text-[var(--mnd-accent)] hover:text-[var(--mnd-accent-hover)]">
+                      View details
                     </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          {filtered.length === 0 && <EmptyRow>No subscriptions match these filters.</EmptyRow>}
         </div>
-      </div>
+      </SectionCard>
     </div>
   );
 }
